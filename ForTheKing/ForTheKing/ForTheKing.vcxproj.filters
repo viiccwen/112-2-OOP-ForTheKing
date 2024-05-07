@@ -15,8 +15,46 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ForTheKing.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="equipment.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="control.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="skill.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="entity.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="equipment.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="skill.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="control.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
