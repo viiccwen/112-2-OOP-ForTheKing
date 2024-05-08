@@ -15,7 +15,7 @@ class Map {
 public:
 	Map();
 	std::vector<std::vector<char>> map;
-	void printMap(Role& role, std::stringstream& buffer);
+	void printMap(Role* roles, int index, std::stringstream& buffer);
 };
 
 #endif // !_MAP_H_
