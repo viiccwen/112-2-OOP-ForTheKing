@@ -1,12 +1,13 @@
 #include "Map.h"
 
 #include <iostream>
-
+#include <map>
 Map::Map() {
 	map.assign(140, std::vector<char>(50, '.'));
 }
 
-void Map::printMap(Role& role, std::stringstream& buffer) {
+void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
+	Role &role = roles[index];
 	int startX = std::max(0, role.position.x - 20);
 	int endX = std::min(140, role.position.x + 20);
 	int startY = std::max(0, role.position.y - 10);
@@ -27,19 +28,27 @@ void Map::printMap(Role& role, std::stringstream& buffer) {
 		else
 			startY = endY - 20;
 	}
-	for (int i = startY; i < endY; i++)
+
+	std::map<std::pair<int, int>, int> rolePosition;
+
+	for (int i = 0; i < 3; i++) {
+		Role& role = roles[i];
+		rolePosition[{role.position.x, role.position.y}] = role.index;
+	}
+
+	for (int y = startY; y < endY; y++)
 	{
-		for (int j = startX; j < endX; j++)
+		for (int x = startX; x < endX; x++)
 		{
-			if (j == role.position.x && i == role.position.y)
-			{
-				buffer << BG_YELLOW << role.index << CLOSE;
+			auto it = rolePosition.find({ x, y });
+			if (it != rolePosition.end()) {
+				buffer << BG_YELLOW << it->second << CLOSE;
 			}
-			else if (map[j][i] == '#')
+			else if (map[x][y] == '#')
 			{
 				buffer << BG_GREY << ' ' << CLOSE;
 			}
-			else if (map[j][i] == '.')
+			else if (map[x][y] == '.')
 			{
 				buffer << BG_YELLOW << FG_BLACK << '.' << CLOSE;
 			}
