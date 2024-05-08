@@ -1,9 +1,15 @@
 #include "Entity.h"
+#include "map.h"
 
 int Role::Money = 600;
 std::vector<std::string> Bag = {};
 
-Role::Role(std::string _name) {
+static int randomBetween(int min, int max, bool includeMax = false) {
+	return rand() % (max - min + includeMax) + min;
+}
+
+Role::Role(int _index, std::string _name) {
+	index = _index;
 	name = _name;
 
 	//  int x = rand() % (max - min + 1) + min;
@@ -32,6 +38,8 @@ Role::Role(std::string _name) {
 	accessory.Type = AccessoryType::None;
 
 	skills = {};
+
+	position = { randomBetween(0, 140), randomBetween(0, 50) };
 }
 
 Enemy::Enemy(std::string _name) {
