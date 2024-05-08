@@ -7,6 +7,11 @@
 #include "skill.h"
 #include "item.h"
 
+struct Point {
+	int x;
+	int y;
+};
+
 class Entity {
 private:
 
@@ -35,11 +40,14 @@ public:
 	Weapon weapon;
 	Armor armor;
 	Accessory accessory;
+
+	Point position;
 };
 
 class Role : public Entity {
 public:
-	Role(std::string _name);
+	Role(int _index,std::string _name);
+	int index;
 	static int Money;
 	static std::vector<Equipment> Bag;
 };
