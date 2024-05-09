@@ -30,7 +30,7 @@ void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
 	}
 
 	std::map<std::pair<int, int>, int> rolePosition;
-	
+
 	for (int i = 0; i < 3; i++) {
 		Role& getPositionRole = roles[i];
 		rolePosition[{getPositionRole.position.x, getPositionRole.position.y}] = getPositionRole.index;
@@ -63,6 +63,9 @@ void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
 			else if (map[x][y] == ENEMY)
 			{
 				buffer << BG_RED << ENEMY << CLOSE;
+			}
+			else if (map[x][y] == EVENT) {
+				buffer << BG_YELLOW << EVENT << CLOSE;
 			}
 		}
 		buffer << '\n';

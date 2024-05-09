@@ -12,10 +12,12 @@ public:
 	Map map;
 	Role roles[3];
 	Game();
-	int shootCraps(int amont, double chance);
+	void initRoleAndMap();
+	int shootCraps(int amont, double chance, int useFocus);
 	bool isValidRect(int x, int y);
-	bool move(int moveRoleIndex);
+	bool move(int press, int moveRoleIndex);
 	void refreshMap(int moveRoleIndex, std::stringstream& buffer);
+	void showShopList(int index);
 	void run();
 };
 

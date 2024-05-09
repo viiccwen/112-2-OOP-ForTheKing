@@ -42,8 +42,6 @@ Role::Role(int _index, std::string _name) {
 	accessory.Type = AccessoryType::None;
 
 	skills = {};
-
-	position = { randomBetween(0, 140), randomBetween(0, 50) };
 }
 
 Enemy::Enemy(std::string _name) {
