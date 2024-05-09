@@ -8,6 +8,10 @@ static int randomBetween(int min, int max, bool includeMax = false) {
 	return rand() % (max - min + includeMax) + min;
 }
 
+Role::Role() {
+	index = 0;
+};
+
 Role::Role(int _index, std::string _name) {
 	index = _index;
 	name = _name;

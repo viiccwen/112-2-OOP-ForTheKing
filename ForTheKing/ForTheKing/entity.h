@@ -46,6 +46,7 @@ public:
 
 class Role : public Entity {
 public:
+	Role();
 	Role(int _index,std::string _name);
 	int index;
 	static int Money;
