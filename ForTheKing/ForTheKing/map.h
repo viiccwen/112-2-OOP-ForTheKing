@@ -6,9 +6,19 @@
 
 #include "entity.h"
 
+#define ROAD '.'
+#define WALL '#'
+#define SHOP '$'
+#define ENEMY 'E'
+
+#define BG_RED "\033[48;2;255;0;0m"
+#define BG_BLUE "\033[48;2;0;0;255m"
 #define BG_YELLOW "\033[48;2;193;156;0m"
 #define BG_GREY "\033[48;2;118;118;118m"
+
+#define FG_GREEN "\033[38;2;0;255;0m"
 #define FG_BLACK "\033[38;2;0;0;0m"
+
 #define CLOSE "\033[0m"
 
 class Map {

@@ -7,7 +7,7 @@ Map::Map() {
 }
 
 void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
-	Role &role = roles[index];
+	Role& role = roles[index];
 	int startX = std::max(0, role.position.x - 20);
 	int endX = std::min(140, role.position.x + 20);
 	int startY = std::max(0, role.position.y - 10);
@@ -30,10 +30,10 @@ void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
 	}
 
 	std::map<std::pair<int, int>, int> rolePosition;
-
+	
 	for (int i = 0; i < 3; i++) {
-		Role& role = roles[i];
-		rolePosition[{role.position.x, role.position.y}] = role.index;
+		Role& getPositionRole = roles[i];
+		rolePosition[{getPositionRole.position.x, getPositionRole.position.y}] = getPositionRole.index;
 	}
 
 	for (int y = startY; y < endY; y++)
@@ -42,15 +42,27 @@ void Map::printMap(Role* roles, int index, std::stringstream& buffer) {
 		{
 			auto it = rolePosition.find({ x, y });
 			if (it != rolePosition.end()) {
-				buffer << BG_YELLOW << it->second << CLOSE;
+				buffer << BG_YELLOW;
+				if (it->second == role.index) {
+					buffer << FG_GREEN;
+				}
+				buffer << it->second << CLOSE;
 			}
-			else if (map[x][y] == '#')
+			else if (map[x][y] == WALL)
 			{
-				buffer << BG_GREY << ' ' << CLOSE;
+				buffer << BG_GREY << WALL << CLOSE;
 			}
-			else if (map[x][y] == '.')
+			else if (map[x][y] == ROAD)
 			{
-				buffer << BG_YELLOW << FG_BLACK << '.' << CLOSE;
+				buffer << BG_YELLOW << FG_BLACK << ROAD << CLOSE;
+			}
+			else if (map[x][y] == SHOP)
+			{
+				buffer << BG_BLUE << SHOP << CLOSE;
+			}
+			else if (map[x][y] == ENEMY)
+			{
+				buffer << BG_RED << ENEMY << CLOSE;
 			}
 		}
 		buffer << '\n';
