@@ -10,6 +10,7 @@ private:
 	Control ctl;
 	Map map;
 	Role roles[3];
+	int moveRoleIndex;
 	std::vector<Enemy> enemies;
 	PositionMap enemyPositionMap;
 public:
@@ -17,25 +18,25 @@ public:
 	void run();
 	void initRoleAndMap();
 
-	bool processFocus(int moveRoleIndex, int& useFocus);
+	bool processFocus(int& useFocus);
 	int shootCraps(int amount, double chance, int useFocus);
-	int calculateMovementPoints(int moveRoleIndex, int useFocus);
-	void executeMovement(int moveRoleIndex, int movePoint);
-	bool processPlayerInput(int moveRoleIndex, int& movePoint);
-	bool move(int press, int moveRoleIndex);
+	int calculateMovementPoints(int useFocus);
+	void executeMovement(int movePoint);
+	bool processPlayerInput(int& movePoint);
+	bool move(int press);
 	bool isValidRect(int x, int y);
-	void refreshMap(int moveRoleIndex);
+	void refreshMap();
 
-	void handleEvents(int moveRoleIndex);
+	void handleEvents();
 
-	void handleShop(int moveRoleIndex);
+	void handleShop();
 	void showShopList(int index);
-	void processShopInput(int moveRoleIndex, int& selectIndex, int press);
-	void executePurchase(int moveRoleIndex, int selectIndex);
+	void processShopInput(int& selectIndex, int press);
+	void executePurchase(int selectIndex);
 	
-	void handleEnemy(int moveRoleIndex);
-	void showCombatPanel(int moveRoleIndex, int selectIndex);
-	bool processEnemyInput(int moveRoleIndex,int& selectIndex, int press);
+	void handleEnemy();
+	void showCombatPanel(int selectIndex);
+	bool processEnemyInput(int& selectIndex, int press);
 
 };
 
