@@ -16,6 +16,8 @@ class Entity {
 private:
 
 public:
+	int index;
+
 	int Vitality;
 	int Focus;
 	int Speed;
@@ -47,15 +49,15 @@ public:
 class Role : public Entity {
 public:
 	Role();
-	Role(int _index,std::string _name);
-	int index;
+	Role(int _index, std::string _name);
 	static int Money;
 	static std::vector<Equipment> Bag;
 };
 
 class Enemy : public Entity {
 public:
-	Enemy(std::string _name);
+	Enemy();
+	Enemy(int _index, std::string _name);
 };
 
 #endif // !_ENTITY_H_

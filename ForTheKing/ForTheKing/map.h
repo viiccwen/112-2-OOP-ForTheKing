@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <sstream>
+#include <map>
 
 #include "entity.h"
 
@@ -26,11 +27,21 @@
 
 #define CLOSE "\033[0m"
 
+struct PositionMap {
+	std::map<std::pair<int, int>, int> positionMap;
+	
+	PositionMap() {
+	}
+	
+	void addPosition(int x, int y, int index) {
+		positionMap[std::make_pair(x, y)] = index;
+	}
+};
 class Map {
 public:
 	Map();
 	std::vector<std::vector<char>> map;
-	void printMap(Role* roles, int index, std::stringstream& buffer);
+	void printMap(Role* roles, PositionMap& enemyPositionMap, int index, std::stringstream& buffer);
 };
 
 #endif // !_MAP_H_

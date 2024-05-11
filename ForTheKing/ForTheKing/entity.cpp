@@ -44,7 +44,8 @@ Role::Role(int _index, std::string _name) {
 	skills = {};
 }
 
-Enemy::Enemy(std::string _name) {
+Enemy::Enemy(int _index, std::string _name) {
+	index = _index;
 	name = _name;
 
 	//  int x = rand() % (max - min + 1) + min;
