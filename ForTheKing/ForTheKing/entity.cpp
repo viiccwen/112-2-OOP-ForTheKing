@@ -42,11 +42,10 @@ Role::Role(int _index, std::string _name) {
 	accessory.Type = AccessoryType::None;
 
 	skills = {};
-
-	position = { randomBetween(0, 140), randomBetween(0, 50) };
 }
 
-Enemy::Enemy(std::string _name) {
+Enemy::Enemy(int _index, std::string _name) {
+	index = _index;
 	name = _name;
 
 	//  int x = rand() % (max - min + 1) + min;
