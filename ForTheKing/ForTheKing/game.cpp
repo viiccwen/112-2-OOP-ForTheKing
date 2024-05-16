@@ -286,55 +286,9 @@ void Game::executePurchase(int selectIndex) {
 }
 
 void Game::handleEnemy() {
-	Role& role = roles[moveRoleIndex];
+	Role& roleR = roles[moveRoleIndex];
 	int selectIndex = 0;
 
-	while (true) {
-		showCombatPanel(selectIndex);
-		int press = ctl.GetInput();
-		if (processEnemyInput(selectIndex, press)) {
-			break;
-		}
-	}
-}
-void Game::showCombatPanel(int selectIndex) {
-	system("cls");
-	Role& role = roles[moveRoleIndex];
-	Enemy& enemy = enemies[enemyPositionMap.positionMap[{role.position.x, role.position.y}]];
-	std::cout << "Name: " << enemy.name << "\n";
-	std::cout << "Vitality: " << enemy.Vitality << "/" << enemy.MaxVitality << '\n';
-	std::cout << "\n\nSelect your action:\n";
-	std::string actions[] = { "Attack", "Use Item", "Flee" };
-	for (int i = 0; i < 3; i++)
-	{
-		if (i == selectIndex) {
-			std::cout << FG_BLUE;
-		}
-		std::cout << i + 1 << ". " << actions[i] << CLOSE << '\n';
-	}
-}
+	Combat combat(roleR, enemies[enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}]]);
 
-
-bool Game::processEnemyInput(int& selectIndex, int press) {
-	bool fleeFlag = false;
-	if (ctl.isUp(press)) {
-		if (selectIndex == 0) return fleeFlag;
-		selectIndex--;
-	}
-	else if (ctl.isDown(press)) {
-		if (selectIndex == 2) return fleeFlag;
-		selectIndex++;
-	}
-	else if (ctl.isEnter(press)) {
-		if (selectIndex == 0) {
-			// TODO: Attack
-		}
-		else if (selectIndex == 1) {
-			// TODO: Use Item
-		}
-		else if (selectIndex == 2) {
-			fleeFlag = true;
-		}
-	}
-	return fleeFlag;
 }

@@ -44,6 +44,7 @@ public:
 	Accessory accessory;
 
 	Point position;
+	Entity();
 };
 
 class Role : public Entity {

@@ -8,6 +8,10 @@ static int randomBetween(int min, int max, bool includeMax = false) {
 	return rand() % (max - min + includeMax) + min;
 }
 
+Entity::Entity() {
+	index = 0;
+};
+
 Role::Role() {
 	index = 0;
 };
@@ -43,6 +47,10 @@ Role::Role(int _index, std::string _name) {
 
 	skills = {};
 }
+
+Enemy::Enemy() {
+	index = 0;
+};
 
 Enemy::Enemy(int _index, std::string _name) {
 	index = _index;

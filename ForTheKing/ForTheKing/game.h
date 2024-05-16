@@ -4,6 +4,7 @@
 #include "entity.h"
 #include "map.h"
 #include "control.h"
+#include "combat.h"
 
 class Game {
 private:
