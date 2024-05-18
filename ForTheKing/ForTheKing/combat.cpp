@@ -19,7 +19,7 @@ void Combat::combatLoop() {
 		resultLog = Combat::isCombatEnd();
 		if (isEnd) {
 			Combat::showStatus();
-			std::cout<<'\n'<<resultLog<<'\n';
+			std::cout << '\n' << resultLog << '\n';
 			system("pause");
 			break;
 		}
@@ -40,9 +40,11 @@ void Combat::combatLoop() {
 }
 
 std::string Combat::isCombatEnd() {
-	if (isEnd)return "Flee success!";
-	
-	if (combatRole.role.Vitality <= 0) {
+	if (resultLog == "Flee success!") {
+		isEnd = true;
+		return "You fled from the battle!";
+	}
+	else if (combatRole.role.Vitality <= 0) {
 		isEnd = true;
 		return "Role is dead!";
 	}
@@ -50,6 +52,7 @@ std::string Combat::isCombatEnd() {
 		isEnd = true;
 		return "Enemy is dead!";
 	}
+	isEnd = false;
 	return "";
 }
 
@@ -80,8 +83,7 @@ void Combat::showStatus() {
 
 void Combat::showCombatPanel(int selectIndex) {
 	std::cout << "(You have " << combatRole.role.Focus - combatRole.useFocus << " focus left)\n";
-	for (int i = 0; i < combatRole.role.MaxFocus; i++)
-	{
+	for (int i = 0; i < combatRole.role.MaxFocus; i++) {
 		if (i < combatRole.useFocus) {
 			std::cout << FG_RED;
 		}
@@ -96,8 +98,7 @@ void Combat::showCombatPanel(int selectIndex) {
 	std::cout << '\n';
 
 	std::string actions[] = { "Attack", "Use Item", "Flee" ,"do nothing" };
-	for (int i = 0; i < 4; i++)
-	{
+	for (int i = 0; i < 4; i++) {
 		if (i == selectIndex) {
 			std::cout << FG_BLUE;
 		}
@@ -131,17 +132,18 @@ void Combat::processInput(int& selectIndex, int press) {
 	else if (ctl.isEnter(press)) {
 		ActiveSkills skill;
 		if (selectIndex == 0) {
-			skill.doAttack(*attacker, *defender, combatRole.useFocus, resultLog);
+			skill = ActiveSkills(ActiveSkillType::Attack);
 		}
 		else if (selectIndex == 1) {
 			// TODO: Use Item
 		}
 		else if (selectIndex == 2) {
-			skill.doFlee(*attacker, combatRole.useFocus, resultLog, isEnd);
+			skill = ActiveSkills(ActiveSkillType::Flee);
 		}
 		else if (selectIndex == 3) {
 			resultLog = attacker->name + " do nothing";
 		}
+		skill.execute(*attacker, *defender, combatRole.useFocus, resultLog);
 		combatRole.moveCount++;
 	}
 	if (resultLog != "") {

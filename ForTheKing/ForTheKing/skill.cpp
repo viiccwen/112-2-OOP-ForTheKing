@@ -1,16 +1,30 @@
 #include "skill.h"
 #include "entity.h"
 
-ActiveSkills::ActiveSkills(){
+Skills::Skills(){}
+
+Skills::Skills(const std::string& name, const std::string& description)
+	: name(name), description(description) {}
+
+ActiveSkills::ActiveSkills(ActiveSkillType type): Type(type) {
+	switch (type) {
+	case ActiveSkillType::Attack:
+		name = "Attack";
+		description = "Attack the enemy.";
+		break;
+	case ActiveSkillType::Flee:
+		name = "Flee";
+		description = "Flee from the battle.";
+		break;
+		// 其他技能...
+	}
 }
 
-//ActiveSkills::ActiveSkills(ActiveSkillType type) : Type(type) {
-//}
-//
-//bool ActiveSkills::operator==(const ActiveSkills& other) const {
-//	return Type == other.Type;
-//}
-//
+ActiveSkills::ActiveSkills() : Type(ActiveSkillType::Attack) {}
+
+ActiveSkills::ActiveSkills(ActiveSkillType type, const std::string& name, const std::string& description)
+	: Skills(name, description), Type(type) {}
+
 bool shootCraps(int amont, double chance, int useFocus = 0) {
 	int win = 0;
 	for (int i = 0; i < amont; i++)
@@ -22,7 +36,19 @@ bool shootCraps(int amont, double chance, int useFocus = 0) {
 	return win;
 }
 
-bool ActiveSkills::doAttack(Entity& attacker, Entity& defender, int useFocus,std::string& result) {
+bool ActiveSkills::execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
+	switch (Type) {
+	case ActiveSkillType::Attack:
+		return doAttack(attacker, defender, 0, result);
+		break;
+	case ActiveSkillType::Flee:
+		return doFlee( attacker, useFocus, result);
+		break;
+		// 其他技能...
+	}
+}
+
+bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
 	if (shootCraps(1, attacker.HitRate))
 	{
 		defender.Vitality -= attacker.PAttack;
@@ -33,16 +59,30 @@ bool ActiveSkills::doAttack(Entity& attacker, Entity& defender, int useFocus,std
 	return false;
 }
 
-bool ActiveSkills::doFlee(Entity& attacker,int useFocus, std::string& result,bool& isEnd) {
-	double chance = attacker.Vitality/(double)(attacker.MaxVitality+attacker.PDefense+attacker.MDefense)*attacker.Speed;
+bool doFlee(Entity& attacker, int useFocus, std::string& result) {
+	double chance = attacker.Vitality / (double)(attacker.MaxVitality + attacker.PDefense + attacker.MDefense) * attacker.Speed;
 	chance = chance > 98 ? 98 : chance;
 	if (shootCraps(1, chance, useFocus))
 	{
 		result = "Flee success!";
-		isEnd = true;
 		return true;
 	}
 	result = "Flee fail!";
-	isEnd = false;
+	return false;
+}
+
+PassiveSkills::PassiveSkills(PassiveSkillType type): Type(type) {
+	switch (type) {
+	
+	}
+}
+
+PassiveSkills::PassiveSkills(PassiveSkillType type, const std::string& name, const std::string& description)
+	: Skills(name, description), Type(type) {}
+
+bool PassiveSkills::execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
+	switch (Type) {
+		return false;
+	}
 	return false;
 }

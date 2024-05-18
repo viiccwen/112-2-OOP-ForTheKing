@@ -38,7 +38,7 @@ public:
 
 	std::string name;
 
-	std::vector<Skills> skills;
+	std::vector<ActiveSkills> actSkills;
 	Weapon weapon;
 	Armor armor;
 	Accessory accessory;

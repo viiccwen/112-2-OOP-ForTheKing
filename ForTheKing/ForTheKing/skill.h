@@ -19,10 +19,17 @@ enum class PassiveSkillType {
 	Fortify
 };
 
-class Skills {
-};
-
 class Entity;
+
+class Skills {
+public:
+	std::string name;
+	std::string description;
+
+	Skills();
+	Skills(const std::string& name, const std::string& description);
+	virtual bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) = 0;
+};
 
 class ActiveSkills : public Skills {
 public:
@@ -30,14 +37,21 @@ public:
 
 	ActiveSkills();
 	ActiveSkills(ActiveSkillType type);
-	bool operator==(const ActiveSkills& other) const;
-	bool doAttack(Entity& user, Entity& target, int useFocus, std::string& result);
-	bool doFlee(Entity& user,int useFocus, std::string& result,bool& isEnd);
+	ActiveSkills(ActiveSkillType type, const std::string& name, const std::string& description);
+
+	bool execute(Entity& attacker, Entity& defender,int useFocus, std::string& result) override;
 };
 
 class PassiveSkills : public Skills {
 public:
 	PassiveSkillType Type;
+
+	PassiveSkills(PassiveSkillType type);
+	PassiveSkills(PassiveSkillType type, const std::string& name, const std::string& description);
+	bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) override;
 };
+
+bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doFlee(Entity& attacker, int useFocus, std::string& result);
 
 #endif // !_SKILL_H_

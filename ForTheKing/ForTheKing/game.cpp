@@ -59,6 +59,7 @@ void Game::initRoleAndMap() {
 	role2.HitRate = role2.MaxHitRate = 80;
 	role2.Speed = role2.MaxSpeed = 80;
 	role2.position = { 50,11 };
+	role2.actSkills = { ActiveSkillType::Attack };
 	enemies[0].position = { 48,9 };
 	map.map[52][13] = SHOP;
 
