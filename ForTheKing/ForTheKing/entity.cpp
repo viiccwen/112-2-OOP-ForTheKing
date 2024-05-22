@@ -12,6 +12,24 @@ Entity::Entity() {
 	index = 0;
 };
 
+std::string Entity::getAttribute(int attributeIndex) {
+	switch (attributeIndex) {
+	case 0: return name;
+	case 1: return std::to_string(Vitality) + "/" + std::to_string(MaxVitality);
+	case 2: return std::to_string(Focus) + "/" + std::to_string(MaxFocus);
+	case 3: return std::to_string(PAttack);
+	case 4: return std::to_string(PDefense);
+	case 5: return std::to_string(MAttack);
+	case 6: return std::to_string(MDefense);
+	case 7: return std::to_string(Speed);
+	case 8: return std::to_string(HitRate);
+	case 9: return weapon.weaponTypeToString();
+	case 10: return armor.armorTypeToString();
+	case 11: return accessory.accessoryTypeToString();
+	default: return "";
+	}
+}
+
 Role::Role() {
 	index = 0;
 };

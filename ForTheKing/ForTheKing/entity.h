@@ -45,6 +45,7 @@ public:
 
 	Point position;
 	Entity();
+	std::string getAttribute(int attributeIndex);
 };
 
 class Role : public Entity {
