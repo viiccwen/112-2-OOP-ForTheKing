@@ -1,6 +1,8 @@
 #include "Game.h"
 #include <algorithm>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 Game::Game() {
 	map = Map();
@@ -91,31 +93,38 @@ void Game::initRoleAndMap() {
 bool Game::processFocus(int& useFocus) {
 	Role& role = roles[moveRoleIndex];
 	bool passFlag = false;
+	bool refreshNeeded = true;
 
 	while (true) {
-		refreshMap();
-		std::cout << "(You have " << role.Focus << " focus left)\n";
-		std::cout << "Use (A) and (D) to use focus, (Enter) to confirm:\n";
-		for (int i = 0; i < role.MaxFocus; i++)
-		{
-			if (i < useFocus) {
-				std::cout << FG_RED;
+		if (refreshNeeded) {
+			refreshMap();
+			std::cout << "(You have " << role.Focus << " focus left)\n";
+			std::cout << "Use (A) and (D) to use focus, (Enter) to confirm:\n";
+			for (int i = 0; i < role.MaxFocus; i++)
+			{
+				if (i < useFocus) {
+					std::cout << FG_RED;
+				}
+				else if (i + 1 > role.Focus) {
+					std::cout << FG_GREY;
+				}
+				else {
+					std::cout << FG_YELLOW;
+				}
+				std::cout << '*' << CLOSE;
 			}
-			else if (i + 1 > role.Focus) {
-				std::cout << FG_GREY;
-			}
-			else {
-				std::cout << FG_YELLOW;
-			}
-			std::cout << '*' << CLOSE;
+			refreshNeeded = false;
 		}
+
 		int press = ctl.GetInput();
 
 		if (ctl.isLeft(press) && useFocus > 0) {
 			useFocus--;
+			refreshNeeded = true;
 		}
 		else if (ctl.isRight(press) && useFocus < role.Focus) {
 			useFocus++;
+			refreshNeeded = true;
 		}
 		else if (ctl.isEnter(press)) {
 			role.Focus -= useFocus;
@@ -150,29 +159,34 @@ int Game::calculateMovementPoints(int useFocus) {
 void Game::executeMovement(int movePoint) {
 	Role& role = roles[moveRoleIndex];
 	bool passFlag = false;
+	bool refreshNeeded = true;
 
 	while (movePoint > 0 && !passFlag) {
-		refreshMap();
-		std::cout << movePoint << " movement points left\n";
-		passFlag = processPlayerInput(movePoint);
-		handleEvents();
+		if (refreshNeeded) {
+			refreshMap();
+			std::cout << movePoint << " movement points left\n";
+			refreshNeeded = false;
+		}
+		Point originPosition = role.position;
+		processPlayerInput(movePoint, passFlag, refreshNeeded);
+		handleEvents(originPosition);
 	}
 }
 
-bool Game::processPlayerInput(int& movePoint) {
+void Game::processPlayerInput(int& movePoint, bool& passFlag, bool& refreshNeeded) {
 	Role& role = roles[moveRoleIndex];
 	int press = ctl.GetInput();
+
 	if (ctl.isP(press)) {
-		return true;
+		passFlag = true;
 	}
 	else if (ctl.isI(press)) {
-		//TODO: Open Inventory
+		// TODO: Open Inventory
 	}
 	else if (move(press)) {
 		movePoint--;
-		refreshMap();
+		refreshNeeded = true;
 	}
-	return false;
 }
 
 bool Game::move(int press) {
@@ -218,19 +232,48 @@ void Game::refreshMap() {
 	Role& role = roles[moveRoleIndex];
 	std::stringstream buffer;
 	system("cls");
-	buffer << role.name << ": " << role.position.x << " " << role.position.y << '\n';
+
 	map.printMap(roles, enemyPositionMap, moveRoleIndex, buffer);
+
+	buffer << "\n\n";
+	buffer << "WASD: Move\n";
+	buffer << "'P' Key: End Turn\n";
+	buffer << "'I' Key: Open Bag\n";
+
+	buffer << "+---------------------------------------------------+\n";
+
+	std::vector<std::string> attributes = { "Name", "HP", "Focus", "Physical ATK", "Physical DEF", "Magical ATK", "Magical DEF", "Speed", "HitRate", "Weapon", "Armor", "Accessory" };
+
+	for (int i = 0; i < attributes.size(); i++) {
+		buffer << std::left << std::setw(15) << attributes[i];
+		for (int j = 0; j < 3; j++) {
+			if (j == moveRoleIndex) {
+				buffer << FG_GREEN;
+				buffer << std::setw(15) << roles[j].getAttribute(i);
+				buffer << CLOSE;	
+			}
+			else {
+				buffer << std::setw(15) << roles[j].getAttribute(i);
+			}
+		}
+		buffer << "\n";
+	}
+	buffer << "+---------------------------------------------------+\n";
 	std::cout << buffer.str();
 }
 
-void Game::handleEvents() {
+
+void Game::handleEvents(Point& originPosition) {
 	Role& role = roles[moveRoleIndex];
 	char currentRect = map.map[role.position.x][role.position.y];
 	if (currentRect == SHOP) {
 		handleShop();
 	}
 	else if (enemyPositionMap.positionMap.find({ role.position.x, role.position.y }) != enemyPositionMap.positionMap.end()) {
-		handleEnemy();
+		bool isFlee = handleEnemy();
+		if (isFlee) {
+			role.position = originPosition;
+		}
 	}
 }
 
@@ -262,7 +305,6 @@ void Game::showShopList(int selectIndex) {
 			std::cout << FG_BLUE;
 		}
 		std::cout << itemIndex + 1 << ". " << items[itemIndex] << CLOSE << '\n';
-
 	}
 	std::cout << "Press Backspace To Exit.\n";
 }
@@ -283,13 +325,16 @@ void Game::processShopInput(int& selectIndex, int press) {
 
 void Game::executePurchase(int selectIndex) {
 	Role& role = roles[moveRoleIndex];
-	// TODO: add he item to role's bag and reduce the money
+	// TODO: add the item to role's bag and reduce the money
 }
 
-void Game::handleEnemy() {
+bool Game::handleEnemy() {
 	Role& roleR = roles[moveRoleIndex];
 	int selectIndex = 0;
 
 	Combat combat(roleR, enemies[enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}]]);
-
+	if (combat.resultLog == "You fled from the battle!") {
+		return true;
+	}
+	return false;
 }
