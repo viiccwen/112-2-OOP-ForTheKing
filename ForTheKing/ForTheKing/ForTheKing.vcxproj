@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="combat.cpp" />
     <ClCompile Include="control.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="equipment.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="skill.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="combat.h" />
     <ClInclude Include="control.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="equipment.h" />

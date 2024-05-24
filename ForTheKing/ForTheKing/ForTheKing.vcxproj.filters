@@ -39,6 +39,9 @@
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="combat.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -60,6 +63,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="combat.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

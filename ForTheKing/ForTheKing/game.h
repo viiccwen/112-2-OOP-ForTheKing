@@ -4,6 +4,7 @@
 #include "entity.h"
 #include "map.h"
 #include "control.h"
+#include "combat.h"
 
 class Game {
 private:
@@ -22,19 +23,19 @@ public:
 	int shootCraps(int amount, double chance, int useFocus);
 	int calculateMovementPoints(int useFocus);
 	void executeMovement(int movePoint);
-	bool processPlayerInput(int& movePoint);
+	void processPlayerInput(int& movePoint, bool& passFlag, bool& refreshNeeded);
 	bool move(int press);
 	bool isValidRect(int x, int y);
 	void refreshMap();
 
-	void handleEvents();
+	void handleEvents(Point& originPosition);
 
 	void handleShop();
 	void showShopList(int index);
 	void processShopInput(int& selectIndex, int press);
 	void executePurchase(int selectIndex);
 	
-	void handleEnemy();
+	bool handleEnemy();
 	void showCombatPanel(int selectIndex);
 	bool processEnemyInput(int& selectIndex, int press);
 
