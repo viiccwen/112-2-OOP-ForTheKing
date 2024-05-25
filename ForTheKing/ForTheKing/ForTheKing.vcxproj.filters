@@ -42,6 +42,9 @@
     <ClCompile Include="combat.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="global.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -66,6 +69,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="combat.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
