@@ -11,10 +11,13 @@ private:
 	Control ctl;
 	Map map;
 	Role roles[3];
-	int moveRoleIndex;
 	std::vector<Enemy> enemies;
 	PositionMap enemyPositionMap;
+
+	int moveRoleIndex;
 public:
+	static int Turn;
+
 	Game();
 	void run();
 	void initRoleAndMap();

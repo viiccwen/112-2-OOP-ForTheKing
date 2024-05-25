@@ -1,8 +1,11 @@
-#include "Game.h"
+#include "game.h"
+
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+
+int Game::Turn = 0;
 
 Game::Game() {
 	map = Map();
@@ -25,8 +28,14 @@ Game::Game() {
 
 void Game::run() {
 	int moveTurn = 0;
+
 	do {
 		moveRoleIndex = moveTurn % 3;
+		
+		if ((moveTurn + 1) % 3 == 0) {
+			Turn++;
+		}
+		
 		int useFocus = 0;
 		if (roles[moveRoleIndex].Focus <= 0) {
 			std::cout << "(You have no focus left)\n";
@@ -98,6 +107,7 @@ bool Game::processFocus(int& useFocus) {
 	while (true) {
 		if (refreshNeeded) {
 			refreshMap();
+			/*
 			std::cout << "(You have " << role.Focus << " focus left)\n";
 			std::cout << "Use (A) and (D) to use focus, (Enter) to confirm:\n";
 			for (int i = 0; i < role.MaxFocus; i++)
@@ -112,8 +122,9 @@ bool Game::processFocus(int& useFocus) {
 					std::cout << FG_YELLOW;
 				}
 				std::cout << '*' << CLOSE;
-			}
+			}*/
 			refreshNeeded = false;
+			
 		}
 
 		int press = ctl.GetInput();
@@ -233,13 +244,8 @@ void Game::refreshMap() {
 	std::stringstream buffer;
 	system("cls");
 
-	map.printMap(roles, enemyPositionMap, moveRoleIndex, buffer);
-
-	buffer << "\n\n";
-	buffer << "WASD: Move\n";
-	buffer << "'P' Key: End Turn\n";
-	buffer << "'I' Key: Open Bag\n";
-
+	map.printMap(roles, enemyPositionMap, moveRoleIndex);
+	/*
 	buffer << "+---------------------------------------------------+\n";
 
 	std::vector<std::string> attributes = { "Name", "HP", "Focus", "Physical ATK", "Physical DEF", "Magical ATK", "Magical DEF", "Speed", "HitRate", "Weapon", "Armor", "Accessory" };
@@ -260,8 +266,8 @@ void Game::refreshMap() {
 	}
 	buffer << "+---------------------------------------------------+\n";
 	std::cout << buffer.str();
+	*/
 }
-
 
 void Game::handleEvents(Point& originPosition) {
 	Role& role = roles[moveRoleIndex];
@@ -323,9 +329,10 @@ void Game::processShopInput(int& selectIndex, int press) {
 	}
 }
 
+// TODO: add the item to role's bag and reduce the money
 void Game::executePurchase(int selectIndex) {
 	Role& role = roles[moveRoleIndex];
-	// TODO: add the item to role's bag and reduce the money
+	
 }
 
 bool Game::handleEnemy() {

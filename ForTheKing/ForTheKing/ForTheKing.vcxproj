@@ -144,6 +144,7 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="equipment.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="equipment.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="skill.h" />

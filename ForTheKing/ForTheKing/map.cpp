@@ -1,16 +1,16 @@
-#include "Map.h"
+#include "map.h"
 
-#include <iostream>
 Map::Map() {
 	map.assign(140, std::vector<char>(50, '.'));
 }
 
-void Map::printMap(Role* roles, PositionMap& enemyPositionMap, int index, std::stringstream& buffer) {
+void Map::printMap(Role* roles, PositionMap& enemyPositionMap, int index) {
 	Role& role = roles[index];
-	int startX = std::max(0, role.position.x - 20);
-	int endX = std::min(140, role.position.x + 20);
-	int startY = std::max(0, role.position.y - 10);
-	int endY = std::min(50, role.position.y + 10);
+
+	int startX = (std::max)(0, role.position.x - 20);
+	int endX = (std::min)(140, role.position.x + 20);
+	int startY = (std::max)(0, role.position.y - 10);
+	int endY = (std::min)(50, role.position.y + 10);
 
 	if (endX - startX < 40)
 	{
@@ -38,37 +38,73 @@ void Map::printMap(Role* roles, PositionMap& enemyPositionMap, int index, std::s
 	// make operator on the top
 	rolePositionMap[{role.position.x, role.position.y}] = role.index;
 
+	// upper, lower frame
+	for (int i = 0; i < 100; i++) PrintString(i, 0, "-");
+	for (int i = 0; i < 100; i++) PrintString(i, 21, "-");
 
-	for (int y = startY; y < endY; y++)
-	{
-		for (int x = startX; x < endX; x++)
-		{
+	// left, middle, right frame
+	for (int i = 1; i <= 20; i++) PrintString(0, i, "|");
+	for (int i = 1; i <= 20; i++) PrintString(41, i, "|");
+	for (int i = 1; i <= 20; i++) PrintString(99, i, "|");
+
+	// player status
+	PrintString(42, 1, "Turn: ");
+	PrintString(42, 2, "Player name: ");
+	PrintString(42, 3, "Action Point: ");
+
+	// Helper
+	std::string wall = "wall: " + BG_GREY + WALL + CLOSE;
+	std::string road = "road: " + BG_YELLOW + FG_BLACK + ROAD + CLOSE;
+	std::string shop = "shop: " + BG_BLUE + SHOP + CLOSE;
+	std::string _event = "event: " + BG_RED + ENEMY + CLOSE;
+	std::vector<std::string> helper = {
+	"--------------------------Helper-------------------------",
+	"adjust focus: (A), (D)",
+	"confirm:      (Enter)",
+	"move:         (W), (A), (S), (D)",
+	"end turn:     (P)",
+	"open bag:     (I)",
+	wall,
+	road,
+	shop,
+	_event
+	};
+	for (int y = 11, idx = 0; y - 11 < helper.size(); y++, idx++) PrintString(42, y, helper[idx]);
+	
+	// map
+	int posY = 1;
+	for (int y = startY; y < endY; y++) {
+		std::string curStr = "";
+		for (int x = startX; x < endX; x++) {
 			if (rolePositionMap.find({ x, y }) != rolePositionMap.end()) {
-				buffer << BG_YELLOW;
+				curStr += BG_YELLOW;
 				if (rolePositionMap[{x, y}] == role.index) {
-					buffer << FG_GREEN;
+					curStr += FG_GREEN;
 				}
-				buffer << rolePositionMap[{x, y}] << CLOSE;
+				curStr += std::to_string(rolePositionMap[{x, y}]) + CLOSE;
 			}
 			else if (enemyPositionMap.positionMap.find({ x, y }) != enemyPositionMap.positionMap.end()) {
-				buffer << BG_RED << ENEMY << CLOSE;
+				curStr += BG_RED + ENEMY + CLOSE;
 			}
 			else if (map[x][y] == WALL)
 			{
-				buffer << BG_GREY << WALL << CLOSE;
+				curStr += BG_GREY + WALL + CLOSE;
 			}
 			else if (map[x][y] == ROAD)
 			{
-				buffer << BG_YELLOW << FG_BLACK << ROAD << CLOSE;
+				curStr += BG_YELLOW + FG_BLACK + ROAD + CLOSE;
 			}
 			else if (map[x][y] == SHOP)
 			{
-				buffer << BG_BLUE << SHOP << CLOSE;
+				curStr += BG_BLUE + SHOP + CLOSE;
 			}
 			else if (map[x][y] == EVENT) {
-				buffer << BG_YELLOW << EVENT << CLOSE;
+				curStr += BG_YELLOW + EVENT + CLOSE;
 			}
 		}
-		buffer << '\n';
+
+		PrintString(1, posY, curStr);
+		posY++;
 	}
 }
+
