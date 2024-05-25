@@ -16,11 +16,21 @@ ActiveSkills::ActiveSkills(ActiveSkillType type): Type(type) {
 		name = "Flee";
 		description = "Flee from the battle.";
 		break;
+	// test
+	case ActiveSkillType::test:
+		name = "test";
+		description = "test";
+		break;
+	// test
+	case ActiveSkillType::actSkillError:
+		name = "Error";
+		description = "Error";
+		break;
 		// 其他技能...
 	}
 }
 
-ActiveSkills::ActiveSkills() : Type(ActiveSkillType::Attack) {}
+ActiveSkills::ActiveSkills() : Type(ActiveSkillType::actSkillError) {}
 
 ActiveSkills::ActiveSkills(ActiveSkillType type, const std::string& name, const std::string& description)
 	: Skills(name, description), Type(type) {}
@@ -39,11 +49,18 @@ bool shootCraps(int amont, double chance, int useFocus = 0) {
 bool ActiveSkills::execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
 	switch (Type) {
 	case ActiveSkillType::Attack:
-		return doAttack(attacker, defender, 0, result);
+		return doAttack(attacker, defender, useFocus, result);
 		break;
 	case ActiveSkillType::Flee:
 		return doFlee( attacker, useFocus, result);
 		break;
+	//test
+	case ActiveSkillType::test:
+		return dotest(attacker, defender, useFocus, result);
+	//test
+	case ActiveSkillType::actSkillError:
+		result = "Error";
+		return false;
 		// 其他技能...
 	}
 }
@@ -70,6 +87,13 @@ bool doFlee(Entity& attacker, int useFocus, std::string& result) {
 	result = "Flee fail!";
 	return false;
 }
+
+//test
+bool dotest(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
+	result = "test";
+	return true;
+}
+//test
 
 PassiveSkills::PassiveSkills(PassiveSkillType type): Type(type) {
 	switch (type) {

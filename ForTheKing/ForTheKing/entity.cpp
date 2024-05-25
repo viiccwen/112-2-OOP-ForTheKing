@@ -63,7 +63,7 @@ Role::Role(int _index, std::string _name) {
 	armor.Type = ArmorType::None;
 	accessory.Type = AccessoryType::None;
 
-	actSkills = { ActiveSkills(ActiveSkillType::Attack)};
+	actSkills = { ActiveSkillType::Attack,ActiveSkillType::Flee };
 }
 
 Enemy::Enemy() {
@@ -99,5 +99,5 @@ Enemy::Enemy(int _index, std::string _name) {
 	armor.Type = static_cast<ArmorType>(rand() % (5 - 1 + 1) + 1);
 	accessory.Type = static_cast<AccessoryType>(rand() % (3 - 1 + 1) + 1);
 
-	actSkills = {};
+	//actSkills = {ActiveSkillType::Attack};
 }

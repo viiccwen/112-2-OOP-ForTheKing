@@ -33,8 +33,17 @@ void Combat::combatLoop() {
 			processInput(selectIndex, press);
 		}
 		else {
-			system("pause");
+			if (combatEnemy.enemy.actSkills.size() == 0) {
+				std::cout << '\n' << combatEnemy.enemy.name << " does not have skill" << '\n';
+				combatEnemy.moveCount++;
+			}
+			int enemyRandomActSkill = rand() % combatEnemy.enemy.actSkills.size();
+			ActiveSkills skill = combatEnemy.enemy.actSkills[enemyRandomActSkill];
+			skill.execute(combatEnemy.enemy, combatRole.role, 0, resultLog);
+			std::cout << '\n' << combatEnemy.enemy.name << " use " << skill.name << '\n';
+			std::cout<<'\n' << resultLog << '\n';
 			combatEnemy.moveCount++;
+			system("pause");
 		}
 	}
 }
@@ -97,12 +106,14 @@ void Combat::showCombatPanel(int selectIndex) {
 	}
 	std::cout << '\n';
 
-	std::string actions[] = { "Attack", "Use Item", "Flee" ,"do nothing" };
-	for (int i = 0; i < 4; i++) {
+	//std::string actions[] = { "Attack", "Use Item", "Flee" ,"do nothing" };
+	for (int i = 0; i <= combatRole.role.actSkills.size(); i++) {
 		if (i == selectIndex) {
 			std::cout << FG_BLUE;
 		}
-		std::cout << i + 1 << ". " << actions[i] << CLOSE << '\n';
+		if (i != combatRole.role.actSkills.size())
+			std::cout << i + 1 << ". " << combatRole.role.actSkills[i].name << CLOSE << '\n';
+		else std::cout << i + 1 << ". " << "use item" << CLOSE << '\n';
 	}
 }
 
@@ -114,7 +125,7 @@ void Combat::processInput(int& selectIndex, int press) {
 			selectIndex--;
 	}
 	else if (ctl.isDown(press)) {
-		if (selectIndex < 3)
+		if (selectIndex < combatRole.role.actSkills.size())
 			selectIndex++;
 	}
 	//use focus
@@ -131,18 +142,21 @@ void Combat::processInput(int& selectIndex, int press) {
 	//confirm
 	else if (ctl.isEnter(press)) {
 		ActiveSkills skill;
-		if (selectIndex == 0) {
-			skill = ActiveSkills(ActiveSkillType::Attack);
-		}
-		else if (selectIndex == 1) {
+		if (selectIndex == combatRole.role.actSkills.size()){
 			// TODO: Use Item
 		}
-		else if (selectIndex == 2) {
+		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::Attack) {
+			skill = ActiveSkills(ActiveSkillType::Attack);
+		}
+		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::Flee) {
 			skill = ActiveSkills(ActiveSkillType::Flee);
 		}
-		else if (selectIndex == 3) {
-			resultLog = attacker->name + " do nothing";
+		//test
+		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::test) {
+			skill = ActiveSkills(ActiveSkillType::test);
 		}
+		//test
+		
 		skill.execute(*attacker, *defender, combatRole.useFocus, resultLog);
 		combatRole.moveCount++;
 	}
