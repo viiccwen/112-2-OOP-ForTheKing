@@ -26,77 +26,82 @@ Game::Game() {
 	}
 }
 
-void Game::run() {
-	int moveTurn = 0;
-
-	do {
-		moveRoleIndex = moveTurn % 3;
-		
-		if ((moveTurn + 1) % 3 == 0) {
-			Turn++;
-		}
-		
-		int useFocus = 0;
-		if (roles[moveRoleIndex].Focus <= 0) {
-			std::cout << "(You have no focus left)\n";
-		}
-		else if (processFocus(useFocus)) {
-			continue;
-		}
-
-		int movePoint = calculateMovementPoints(useFocus);
-		if (movePoint == 0) {
-			std::cout << "\n" << roles[moveRoleIndex].name << " Fumble!!!!!\n";
-			std::cout << "Press Any Button To Next Turn.\n";
-			system("pause");
-			continue;
-		}
-
-		executeMovement(movePoint);
-	} while (++moveTurn);
-}
-
 void Game::initRoleAndMap() {
 	Role& role1 = roles[0];
-	role1.position = { 135,47 };
+
 
 	Role& role2 = roles[1];
 	role2.Vitality = role2.MaxVitality = 26;
-	role2.Focus = role2.MaxFocus = 6;
+	role2.Focus = role2.MaxFocus = 3;
 	role2.PAttack = role2.MaxPAttack = 24;
 	role2.PDefense = role2.MaxPDefense = 3;
 	role2.MAttack = role2.MaxMAttack = 0;
 	role2.MDefense = role2.MaxMDefense = 3;
 	role2.HitRate = role2.MaxHitRate = 80;
 	role2.Speed = role2.MaxSpeed = 80;
-	role2.position = { 50,11 };
+
 	role2.actSkills = { ActiveSkillType::Attack };
-	enemies[0].position = { 48,9 };
 	map.map[52][13] = SHOP;
 
 	Role& role3 = roles[2];
 	role3.Vitality = role3.MaxVitality = 26;
-	role3.Focus = role3.MaxFocus = 6;
+	role3.Focus = role3.MaxFocus = 3;
 	role3.PAttack = role3.MaxPAttack = 24;
 	role3.PDefense = role3.MaxPDefense = 2;
 	role3.MAttack = role3.MaxMAttack = 0;
 	role3.MDefense = role3.MaxMDefense = 4;
 	role3.HitRate = role3.MaxHitRate = 1;
 	role3.Speed = role3.MaxSpeed = 90;
+
+	role1.position = { 135,47 };
+	role2.position = { 50,11 };
 	role3.position = { 50,12 };
+	enemies[0].position = { 48,9 };
 	enemies[1].position = { 52,14 };
+
 	map.map[48][10] = SHOP;
-
-
 	map.map[136][47] = WALL;
 	map.map[136][48] = WALL;
 	map.map[136][49] = WALL;
 	map.map[137][47] = WALL;
 	map.map[138][47] = WALL;
 	map.map[139][47] = WALL;
-
 	map.map[138][48] = EVENT;
 	map.map[133][45] = SHOP;
+
+	// upper, lower frame
+	for (int i = 0; i < 100; i++) PrintString(i, 0, "-");
+	for (int i = 0; i < 100; i++) PrintString(i, 21, "-");
+
+	// left, middle, right frame
+	for (int i = 1; i <= 20; i++) PrintString(0, i, "|");
+	for (int i = 1; i <= 20; i++) PrintString(41, i, "|");
+	for (int i = 1; i <= 20; i++) PrintString(99, i, "|");
+
+	// player status
+	PrintString(42, 1, "Turn: ");
+	PrintString(42, 2, "Player name: ");
+	PrintString(42, 3, "use focus: ");
+	PrintString(42, 4, "Action Point: ");
+
+	// Helper
+	std::string wall = "wall: " + BG_GREY + WALL + CLOSE;
+	std::string road = "road: " + BG_YELLOW + FG_BLACK + ROAD + CLOSE;
+	std::string shop = "shop: " + BG_BLUE + SHOP + CLOSE;
+	std::string _event = "event: " + BG_RED + ENEMY + CLOSE;
+	std::vector<std::string> helper = {
+	"--------------------------Helper-------------------------",
+	"adjust focus: (A), (D)",
+	"confirm:      (Enter)",
+	"move:         (W), (A), (S), (D)",
+	"end turn:     (P)",
+	"open bag:     (I)",
+	wall,
+	road,
+	shop,
+	_event
+	};
+	for (int y = 11, idx = 0; y - 11 < helper.size(); y++, idx++) PrintString(42, y, helper[idx]);
 }
 
 bool Game::processFocus(int& useFocus) {
@@ -107,24 +112,21 @@ bool Game::processFocus(int& useFocus) {
 	while (true) {
 		if (refreshNeeded) {
 			refreshMap();
-			/*
-			std::cout << "(You have " << role.Focus << " focus left)\n";
-			std::cout << "Use (A) and (D) to use focus, (Enter) to confirm:\n";
-			for (int i = 0; i < role.MaxFocus; i++)
-			{
-				if (i < useFocus) {
-					std::cout << FG_RED;
-				}
-				else if (i + 1 > role.Focus) {
-					std::cout << FG_GREY;
-				}
-				else {
-					std::cout << FG_YELLOW;
-				}
-				std::cout << '*' << CLOSE;
-			}*/
+
+			// display focus points
+			for (int i = 0; i < role.Focus; i++) {
+				std::string curFcous = "";
+
+				if (i < useFocus) curFcous += FG_RED;
+				else if (i + 1 > role.Focus) curFcous += FG_GREY;
+				else curFcous += FG_YELLOW;
+
+				curFcous += "*" + CLOSE;
+
+				PrintString(53 + i, 3, curFcous);
+			}
 			refreshNeeded = false;
-			
+
 		}
 
 		int press = ctl.GetInput();
@@ -167,20 +169,76 @@ int Game::calculateMovementPoints(int useFocus) {
 	return shootCraps(maxMovementPoint, role.Speed, useFocus);
 }
 
+void Game::run() {
+	int moveTurn = 0;
+
+	PrintString(48, 1, std::to_string(Turn));
+	do {
+		moveRoleIndex = moveTurn % 3;
+		PrintString(55, 2, roles[moveRoleIndex].name);
+		
+		if (moveTurn % 3 == 0) {
+			Turn++;
+			PrintString(48, 1, std::to_string(Turn));
+		}
+		
+		int useFocus = 0;
+
+		// clear
+		PrintString(53, 3, ReturnSpace(20));
+
+		// focus point part
+		if (roles[moveRoleIndex].Focus <= 0) {
+			PrintString(53, 3, "You have no focus left!");
+		}
+		else if (processFocus(useFocus)) {
+			continue;
+		}
+
+		// todo: fumble
+		int movePoint = calculateMovementPoints(useFocus);
+		if (movePoint == 0) {
+			//std::cout << "\n" << roles[moveRoleIndex].name << " Fumble!!!!!\n";
+			//std::cout << "Press Any Button To Next Turn.\n";
+			//system("pause");
+			continue;
+		}
+
+		executeMovement(movePoint);
+	} while (++moveTurn);
+}
+
 void Game::executeMovement(int movePoint) {
 	Role& role = roles[moveRoleIndex];
 	bool passFlag = false;
 	bool refreshNeeded = true;
 
+	int originMovePoint = movePoint;
 	while (movePoint > 0 && !passFlag) {
 		if (refreshNeeded) {
 			refreshMap();
-			std::cout << movePoint << " movement points left\n";
+
+			// display focus points
+			for (int i = 0; i < originMovePoint; i++) {
+				std::string curMovePoint = "";
+				
+				if (i < movePoint) curMovePoint += FG_YELLOW;
+				else curMovePoint += FG_GREY;
+
+				curMovePoint += "*" + CLOSE;
+
+				PrintString(56 + i, 4, curMovePoint);
+				
+			}
+			
 			refreshNeeded = false;
 		}
 		Point originPosition = role.position;
 		processPlayerInput(movePoint, passFlag, refreshNeeded);
 		handleEvents(originPosition);
+
+		// let next player's movePoint be clear
+		if(movePoint == 0) PrintString(56, 4, ReturnSpace(20));
 	}
 }
 
@@ -195,7 +253,7 @@ void Game::processPlayerInput(int& movePoint, bool& passFlag, bool& refreshNeede
 		// TODO: Open Inventory
 	}
 	else if (move(press)) {
-		movePoint--;
+		movePoint--;	
 		refreshNeeded = true;
 	}
 }
@@ -228,12 +286,10 @@ bool Game::move(int press) {
 bool Game::isValidRect(int x, int y) {
 	if (x < 0 || x >= 140 || y < 0 || y >= 50)
 	{
-		std::cout << "Invalid movement\n";
 		return false;
 	}
 	if (map.map[x][y] == WALL)
 	{
-		std::cout << "Invalid movement\n";
 		return false;
 	}
 	return true;
@@ -242,7 +298,7 @@ bool Game::isValidRect(int x, int y) {
 void Game::refreshMap() {
 	Role& role = roles[moveRoleIndex];
 	std::stringstream buffer;
-	system("cls");
+	// system("cls");
 
 	map.printMap(roles, enemyPositionMap, moveRoleIndex);
 	/*

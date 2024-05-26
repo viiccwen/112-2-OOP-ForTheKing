@@ -6,7 +6,7 @@
 #include <windows.h>
 
 void PrintString(int x, int y, std::string s);
-
+std::string ReturnSpace(int number);
 
 /* Map
 -------------------------------------------------------------------------------- 0
