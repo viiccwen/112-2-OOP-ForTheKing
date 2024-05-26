@@ -10,7 +10,7 @@ class Game {
 private:
 	Control ctl;
 	Map map;
-	Role roles[3];
+	std::vector<Role> roles;
 	std::vector<Enemy> enemies;
 	PositionMap enemyPositionMap;
 
@@ -41,7 +41,6 @@ public:
 	bool handleEnemy();
 	void showCombatPanel(int selectIndex);
 	bool processEnemyInput(int& selectIndex, int press);
-
 };
 
 #endif // !_GAME_H_

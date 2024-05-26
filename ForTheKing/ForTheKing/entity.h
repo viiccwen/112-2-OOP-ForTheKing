@@ -7,6 +7,8 @@
 #include "skill.h"
 #include "item.h"
 
+
+
 struct Point {
 	int x;
 	int y;
@@ -54,6 +56,9 @@ public:
 	Role(int _index, std::string _name);
 	static int Money;
 	static std::vector<Equipment> Bag;
+
+	void MarkCurrentRole();
+	friend void PrintRoleInfo(std::vector<Role> roles);
 };
 
 class Enemy : public Entity {

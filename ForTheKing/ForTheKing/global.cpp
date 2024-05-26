@@ -1,5 +1,24 @@
 #include "global.h"
 
+void SetConsoleSize(int width, int height) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coord;
+    SMALL_RECT rect;
+
+    // set buffer size
+    coord.X = width;
+    coord.Y = height;
+    SetConsoleScreenBufferSize(hConsole, coord);
+
+    // set console size
+    rect.Top = 0;
+    rect.Left = 0;
+    rect.Right = width - 2;
+    rect.Bottom = height - 2;
+    SetConsoleWindowInfo(hConsole, TRUE, &rect);
+}
+
+
 void PrintString(int x, int y, std::string s) {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD position;

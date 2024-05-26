@@ -44,7 +44,7 @@ public:
 	Map();
 	std::vector<std::vector<char>> map;
 	
-	void printMap(Role* roles, PositionMap& enemyPositionMap, int index);
+	void printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index);
 };
 
 #endif // !_MAP_H_
