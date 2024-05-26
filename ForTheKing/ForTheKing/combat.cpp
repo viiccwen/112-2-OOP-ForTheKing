@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-CombatRole::CombatRole(Role& _role) : role(_role), priority(0), moveCount(0), useFocus(0) {
+CombatRole::CombatRole(Role& _role) : role(_role), priority(0), moveCount(0)/*, useFocus(0)*/ {
 }
 
 CombatEnemy::CombatEnemy(Enemy& _enemy) : enemy(_enemy), priority(0), moveCount(0), useFocus(0) {
@@ -76,7 +76,7 @@ void Combat::priorityJudge() {
 	}
 	else {
 		attacker = &combatRole.role;
-		defender = &combatEnemy.enemy;
+		//defender = &combatEnemy.enemy;
 		isRoleTurn = true;
 	}
 }
@@ -91,22 +91,6 @@ void Combat::showStatus() {
 }
 
 void Combat::showCombatPanel(int selectIndex) {
-	std::cout << "(You have " << combatRole.role.Focus - combatRole.useFocus << " focus left)\n";
-	for (int i = 0; i < combatRole.role.MaxFocus; i++) {
-		if (i < combatRole.useFocus) {
-			std::cout << FG_RED;
-		}
-		else if (i + 1 > combatRole.role.Focus) {
-			std::cout << FG_GREY;
-		}
-		else {
-			std::cout << FG_YELLOW;
-		}
-		std::cout << '*' << CLOSE;
-	}
-	std::cout << '\n';
-
-	//std::string actions[] = { "Attack", "Use Item", "Flee" ,"do nothing" };
 	for (int i = 0; i <= combatRole.role.actSkills.size(); i++) {
 		if (i == selectIndex) {
 			std::cout << FG_BLUE;
@@ -128,36 +112,17 @@ void Combat::processInput(int& selectIndex, int press) {
 		if (selectIndex < combatRole.role.actSkills.size())
 			selectIndex++;
 	}
-	//use focus
-	else if (ctl.isRight(press)) {
-		if (combatRole.useFocus < combatRole.role.Focus) {
-			combatRole.useFocus++;
-		}
-	}
-	else if (ctl.isLeft(press)) {
-		if (combatRole.useFocus > 0) {
-			combatRole.useFocus--;
-		}
-	}
 	//confirm
 	else if (ctl.isEnter(press)) {
-		ActiveSkills skill;
 		if (selectIndex == combatRole.role.actSkills.size()){
 			// TODO: Use Item
 		}
-		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::Attack) {
-			skill = ActiveSkills(ActiveSkillType::Attack);
-		}
-		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::Flee) {
-			skill = ActiveSkills(ActiveSkillType::Flee);
-		}
-		//test
-		else if (combatRole.role.actSkills[selectIndex].Type == ActiveSkillType::test) {
-			skill = ActiveSkills(ActiveSkillType::test);
-		}
-		//test
-		
-		skill.execute(*attacker, *defender, combatRole.useFocus, resultLog);
+		else {
+			ActiveSkills skill = combatRole.role.actSkills[selectIndex];
+			defender = &chooseTarget();
+			int useFocus = chooseFocus(skill.maxFocus);
+			skill.execute(*attacker, *defender, useFocus, resultLog);
+		}		
 		combatRole.moveCount++;
 	}
 	if (resultLog != "") {
@@ -165,3 +130,69 @@ void Combat::processInput(int& selectIndex, int press) {
 		system("pause");
 	}
 }
+
+Entity& Combat::chooseTarget() {
+	int selectX = 0;
+	while (true) {
+		showStatus();
+		std::cout << "Choose your target:\n";
+
+		// 顯示敵人名稱
+		if (selectX == 0) {
+			std::cout << FG_YELLOW << combatEnemy.enemy.name << CLOSE << '\n';
+		}
+		else {
+			std::cout << combatEnemy.enemy.name << '\n';
+		}
+
+		int press = ctl.GetInput();
+		if (ctl.isUp(press)) {
+			// TODO: 這裡可以擴展選擇上方敵人
+		}
+		else if (ctl.isDown(press)) {
+			// TODO: 這裡可以擴展選擇下方敵人
+		}
+		else if (ctl.isEnter(press)) {
+			return combatEnemy.enemy;
+		}
+	}
+}
+
+
+int Combat::chooseFocus(int maxFocus) {
+	int useFocus = 0;
+	while (true) {
+		showStatus();
+		std::cout << "(You have " << combatRole.role.Focus - useFocus << " focus left)\n";
+		for (int i = 0; i < combatRole.role.MaxFocus; i++) {
+			if (i < useFocus) {
+				std::cout << FG_RED;
+			}
+			else if (i + 1 > combatRole.role.Focus) {
+				std::cout << FG_GREY;
+			}
+			else {
+				std::cout << FG_YELLOW;
+			}
+			std::cout << '*' << CLOSE;
+		}
+		std::cout << '\n';
+
+		int press = ctl.GetInput();
+		if (ctl.isRight(press)) {
+			if (useFocus < combatRole.role.Focus && useFocus < maxFocus) {
+				useFocus++;
+			}
+		}
+		else if (ctl.isLeft(press)) {
+			if (useFocus > 0) {
+				useFocus--;
+			}
+		}
+		else if (ctl.isEnter(press)) {
+			break;
+		}
+	}
+	combatRole.role.Focus -= useFocus;
+	return useFocus;
+}	

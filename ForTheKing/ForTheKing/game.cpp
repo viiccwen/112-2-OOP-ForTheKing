@@ -78,6 +78,7 @@ void Game::initRoleAndMap() {
 	enemies[1].position = { 52,14 };
 	//test
 	enemies[1].actSkills = { ActiveSkillType::Attack };
+	enemies[1].PAttack = 3;
 	//test
 	map.map[48][10] = SHOP;
 

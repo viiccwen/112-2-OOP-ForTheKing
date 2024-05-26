@@ -11,15 +11,18 @@ ActiveSkills::ActiveSkills(ActiveSkillType type): Type(type) {
 	case ActiveSkillType::Attack:
 		name = "Attack";
 		description = "Attack the enemy.";
+		maxFocus = 1;
 		break;
 	case ActiveSkillType::Flee:
 		name = "Flee";
 		description = "Flee from the battle.";
+		maxFocus = 1;
 		break;
 	// test
 	case ActiveSkillType::test:
 		name = "test";
 		description = "test";
+		maxFocus = 5;
 		break;
 	// test
 	case ActiveSkillType::actSkillError:
@@ -66,7 +69,7 @@ bool ActiveSkills::execute(Entity& attacker, Entity& defender, int useFocus, std
 }
 
 bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
-	if (shootCraps(1, attacker.HitRate))
+	if (shootCraps(1, attacker.HitRate,useFocus))
 	{
 		defender.Vitality -= attacker.PAttack;
 		result = attacker.name + " hit " + defender.name + " for " + std::to_string(attacker.PAttack) + " damage!";

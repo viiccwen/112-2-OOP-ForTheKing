@@ -38,6 +38,7 @@ public:
 class ActiveSkills : public Skills {
 public:
 	ActiveSkillType Type;
+	int maxFocus;
 
 	ActiveSkills();
 	ActiveSkills(ActiveSkillType type);

@@ -14,7 +14,7 @@ public:
 	Role& role;
 	double priority;
 	int moveCount;
-	int useFocus;
+	//int useFocus;
 
 	CombatRole(Role& _role);
 };
@@ -49,6 +49,8 @@ public:
 	void showCombatPanel(int selectIndex);
 	void processInput(int& selectIndex, int press);
 	void showStatus();
+	int chooseFocus(int maxFocus);
+	Entity& chooseTarget();
 };
 
 #endif // !_COMBAT_H_
