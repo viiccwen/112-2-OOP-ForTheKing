@@ -38,38 +38,6 @@ void Map::printMap(Role* roles, PositionMap& enemyPositionMap, int index) {
 	// make operator on the top
 	rolePositionMap[{role.position.x, role.position.y}] = role.index;
 
-	// upper, lower frame
-	for (int i = 0; i < 100; i++) PrintString(i, 0, "-");
-	for (int i = 0; i < 100; i++) PrintString(i, 21, "-");
-
-	// left, middle, right frame
-	for (int i = 1; i <= 20; i++) PrintString(0, i, "|");
-	for (int i = 1; i <= 20; i++) PrintString(41, i, "|");
-	for (int i = 1; i <= 20; i++) PrintString(99, i, "|");
-
-	// player status
-	PrintString(42, 1, "Turn: ");
-	PrintString(42, 2, "Player name: ");
-	PrintString(42, 3, "Action Point: ");
-
-	// Helper
-	std::string wall = "wall: " + BG_GREY + WALL + CLOSE;
-	std::string road = "road: " + BG_YELLOW + FG_BLACK + ROAD + CLOSE;
-	std::string shop = "shop: " + BG_BLUE + SHOP + CLOSE;
-	std::string _event = "event: " + BG_RED + ENEMY + CLOSE;
-	std::vector<std::string> helper = {
-	"--------------------------Helper-------------------------",
-	"adjust focus: (A), (D)",
-	"confirm:      (Enter)",
-	"move:         (W), (A), (S), (D)",
-	"end turn:     (P)",
-	"open bag:     (I)",
-	wall,
-	road,
-	shop,
-	_event
-	};
-	for (int y = 11, idx = 0; y - 11 < helper.size(); y++, idx++) PrintString(42, y, helper[idx]);
 	
 	// map
 	int posY = 1;
