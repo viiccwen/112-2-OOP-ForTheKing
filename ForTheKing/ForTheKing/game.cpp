@@ -9,18 +9,21 @@ int Game::Turn = 0;
 
 Game::Game() {
 	map = Map();
-	for (int i = 0; i < 3; i++)
-	{
+	roles.assign(3, Role());
+	for (int i = 0; i < 3; i++) {
 		roles[i] = Role(i + 1, "Role" + std::to_string(i + 1));
 	}
-	for (int i = 0; i < 10; i++)
-	{
+
+	for (int i = 0; i < 10; i++) {
 		enemies.push_back(Enemy(i + 1, "Enemy" + std::to_string(i + 1)));
 	}
+
 	initRoleAndMap();
+
 	std::sort(std::begin(roles), std::end(roles), [](const Role& lhs, const Role& rhs) {
 		return lhs.Speed < rhs.Speed;
 		});
+
 	for (auto& enemy : enemies) {
 		enemyPositionMap.addPosition(enemy.position.x, enemy.position.y, enemy.index);
 	}
@@ -28,7 +31,6 @@ Game::Game() {
 
 void Game::initRoleAndMap() {
 	Role& role1 = roles[0];
-
 
 	Role& role2 = roles[1];
 	role2.Vitality = role2.MaxVitality = 26;
@@ -69,20 +71,32 @@ void Game::initRoleAndMap() {
 	map.map[138][48] = EVENT;
 	map.map[133][45] = SHOP;
 
-	// upper, lower frame
-	for (int i = 0; i < 100; i++) PrintString(i, 0, "-");
-	for (int i = 0; i < 100; i++) PrintString(i, 21, "-");
+	// upper, middle, lower frame
+	for (int i = 0; i < GAME_ALL_WIDTH; i++) PrintString(i, 0, "-");
+	for (int i = 0; i < GAME_ALL_WIDTH; i++) PrintString(i, MAP_HEIGHT + 1, "-");
+	for (int i = 0; i < GAME_ALL_WIDTH; i++) PrintString(i, MAP_HEIGHT + ROLE_INFO_HEIGHT + 2, "-");
 
 	// left, middle, right frame
-	for (int i = 1; i <= 20; i++) PrintString(0, i, "|");
-	for (int i = 1; i <= 20; i++) PrintString(41, i, "|");
-	for (int i = 1; i <= 20; i++) PrintString(99, i, "|");
+	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(0, i, "|");
+	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(MAP_WIDTH + 1, i, "|");
+	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(GAME_ALL_WIDTH - 1, i, "|");
+	
+	// player's gap frame
+	// vertical
+	for (int roleGapIdx = 0; roleGapIdx < 4; roleGapIdx++) {
+		for (int i = 21; i <= 35; i++) {
+			PrintString(ROLE_INFO_WIDTH * roleGapIdx + roleGapIdx, i, "|");
+		}
+	}
 
-	// player status
+	// current player status
 	PrintString(42, 1, "Turn: ");
 	PrintString(42, 2, "Player name: ");
 	PrintString(42, 3, "use focus: ");
 	PrintString(42, 4, "Action Point: ");
+
+	// player infomation
+	PrintRoleInfo(roles);
 
 	// Helper
 	std::string wall = "wall: " + BG_GREY + WALL + CLOSE;
@@ -90,7 +104,7 @@ void Game::initRoleAndMap() {
 	std::string shop = "shop: " + BG_BLUE + SHOP + CLOSE;
 	std::string _event = "event: " + BG_RED + ENEMY + CLOSE;
 	std::vector<std::string> helper = {
-	"--------------------------Helper-------------------------",
+	"--------------------------------------Helper-------------------------------------",
 	"adjust focus: (A), (D)",
 	"confirm:      (Enter)",
 	"move:         (W), (A), (S), (D)",
@@ -169,14 +183,17 @@ int Game::calculateMovementPoints(int useFocus) {
 	return shootCraps(maxMovementPoint, role.Speed, useFocus);
 }
 
+// BUG: after press P, move-point lines won't clear 
 void Game::run() {
 	int moveTurn = 0;
 
 	PrintString(48, 1, std::to_string(Turn));
 	do {
 		moveRoleIndex = moveTurn % 3;
-		PrintString(55, 2, roles[moveRoleIndex].name);
 		
+		PrintString(55, 2, roles[moveRoleIndex].name);
+		roles[moveRoleIndex].MarkCurrentRole();
+
 		if (moveTurn % 3 == 0) {
 			Turn++;
 			PrintString(48, 1, std::to_string(Turn));
@@ -301,28 +318,7 @@ void Game::refreshMap() {
 	// system("cls");
 
 	map.printMap(roles, enemyPositionMap, moveRoleIndex);
-	/*
-	buffer << "+---------------------------------------------------+\n";
-
-	std::vector<std::string> attributes = { "Name", "HP", "Focus", "Physical ATK", "Physical DEF", "Magical ATK", "Magical DEF", "Speed", "HitRate", "Weapon", "Armor", "Accessory" };
-
-	for (int i = 0; i < attributes.size(); i++) {
-		buffer << std::left << std::setw(15) << attributes[i];
-		for (int j = 0; j < 3; j++) {
-			if (j == moveRoleIndex) {
-				buffer << FG_GREEN;
-				buffer << std::setw(15) << roles[j].getAttribute(i);
-				buffer << CLOSE;	
-			}
-			else {
-				buffer << std::setw(15) << roles[j].getAttribute(i);
-			}
-		}
-		buffer << "\n";
-	}
-	buffer << "+---------------------------------------------------+\n";
-	std::cout << buffer.str();
-	*/
+	
 }
 
 void Game::handleEvents(Point& originPosition) {

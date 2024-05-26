@@ -4,7 +4,7 @@ Map::Map() {
 	map.assign(140, std::vector<char>(50, '.'));
 }
 
-void Map::printMap(Role* roles, PositionMap& enemyPositionMap, int index) {
+void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index) {
 	Role& role = roles[index];
 
 	int startX = (std::max)(0, role.position.x - 20);

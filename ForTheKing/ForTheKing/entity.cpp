@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "map.h"
+#include "global.h"
 
 int Role::Money = 600;
 std::vector<std::string> Bag = {};
@@ -64,6 +65,48 @@ Role::Role(int _index, std::string _name) {
 	accessory.Type = AccessoryType::None;
 
 	actSkills = { ActiveSkills(ActiveSkillType::Attack)};
+}
+
+void Role::MarkCurrentRole() {
+	
+	for (int i = 0; i < GAME_ALL_WIDTH; i++) PrintString(i, MAP_HEIGHT + 1, "-");
+	for (int i = 0; i < GAME_ALL_WIDTH; i++) PrintString(i, MAP_HEIGHT + ROLE_INFO_HEIGHT + 2, "-");
+	
+	for (int roleGapIdx = 0; roleGapIdx < 4; roleGapIdx++) {
+		for (int i = 21; i <= 35; i++) {
+			PrintString(ROLE_INFO_WIDTH * roleGapIdx + roleGapIdx, i, "|");
+		}
+	}
+	
+	for (int i = ROLE_INFO_WIDTH * (index - 1) + index; i <= ROLE_INFO_WIDTH * index + index; i++) PrintString(i, MAP_HEIGHT + 1, FG_GREEN + "-" + CLOSE);
+	for (int i = ROLE_INFO_WIDTH * (index - 1) + index; i <= ROLE_INFO_WIDTH * index + index; i++) PrintString(i, MAP_HEIGHT + ROLE_INFO_HEIGHT + 2, FG_GREEN + "-" + CLOSE);
+
+	for (int i = MAP_HEIGHT + 1; i < GAME_ALL_HEIGHT; i++) PrintString(ROLE_INFO_WIDTH * (index - 1) + (index - 1), i, FG_GREEN + "|" + CLOSE);
+	for (int i = MAP_HEIGHT + 1; i < GAME_ALL_HEIGHT; i++) PrintString(ROLE_INFO_WIDTH * index + index, i, FG_GREEN + "|" + CLOSE);
+}
+
+void PrintRoleInfo(std::vector<Role> roles) {
+	std::vector<std::string> attributes = { 
+		"Name", 
+		"HP", 
+		"Focus", 
+		"Physical ATK", 
+		"Physical DEF", 
+		"Magical ATK", 
+		"Magical DEF", 
+		"Speed", 
+		"HitRate", 
+		"Weapon", 
+		"Armor", 
+		"Accessory" 
+	};
+
+	for (int roleIdx = 0; roleIdx < roles.size(); roleIdx++) {
+		int roleGap = 41 * roleIdx;
+		for (int attrIdx = 0; attrIdx < attributes.size(); attrIdx++) {
+			PrintString(1 + roleGap, 22 + attrIdx, " " + attributes[attrIdx] + ": " + roles[roleIdx].getAttribute(attrIdx));
+		}
+	}
 }
 
 Enemy::Enemy() {
