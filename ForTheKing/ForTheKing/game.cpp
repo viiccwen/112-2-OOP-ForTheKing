@@ -203,7 +203,6 @@ int Game::calculateMovementPoints(int useFocus) {
 	return shootCraps(maxMovementPoint, role.Speed, useFocus);
 }
 
-// BUG: after press P, move-point lines won't clear 
 void Game::run() {
 	int moveTurn = 0;
 
@@ -275,7 +274,7 @@ void Game::executeMovement(int movePoint) {
 		handleEvents(originPosition);
 
 		// let next player's movePoint be clear
-		if (movePoint == 0) PrintString(56, 4, ReturnSpace(20));
+		if (movePoint == 0 || passFlag) PrintString(56, 4, ReturnSpace(20));
 	}
 }
 
