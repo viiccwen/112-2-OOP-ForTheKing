@@ -8,6 +8,11 @@
 int Game::Turn = 0;
 
 Game::Game() {
+	do {
+		PrintString(0, 0, "Please Enlarge The Console");
+		Sleep(100);
+	} while (!checkConsoleSize(GAME_ALL_HEIGHT, GAME_ALL_WIDTH));
+
 	map = Map();
 	roles.assign(3, Role());
 	for (int i = 0; i < 3; i++) {
@@ -27,6 +32,21 @@ Game::Game() {
 	for (auto& enemy : enemies) {
 		enemyPositionMap.addPosition(enemy.position.x, enemy.position.y, enemy.index);
 	}
+}
+
+bool Game::checkConsoleSize(int requiredRows, int requiredCols) {
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+		int consoleRows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+		int consoleCols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+		PrintString(0, 1, ReturnSpace(100));
+		PrintString(0, 2, ReturnSpace(100));
+		PrintString(0, 1, "consoleRows: " + std::to_string(consoleRows) + ", requiredRows: " + std::to_string(requiredRows));
+		PrintString(0, 2, "consoleCols: " + std::to_string(consoleCols) + ", requiredCols: " + std::to_string(requiredCols));
+		if (consoleCols == 149 && consoleRows == 149) return false;
+		return (consoleRows >= requiredRows) && (consoleCols >= requiredCols);
+	}
+	return false;
 }
 
 void Game::initRoleAndMap() {
@@ -80,7 +100,7 @@ void Game::initRoleAndMap() {
 	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(0, i, "|");
 	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(MAP_WIDTH + 1, i, "|");
 	for (int i = 1; i <= MAP_HEIGHT; i++) PrintString(GAME_ALL_WIDTH - 1, i, "|");
-	
+
 	// player's gap frame
 	// vertical
 	for (int roleGapIdx = 0; roleGapIdx < 4; roleGapIdx++) {
@@ -190,7 +210,7 @@ void Game::run() {
 	PrintString(48, 1, std::to_string(Turn));
 	do {
 		moveRoleIndex = moveTurn % 3;
-		
+
 		PrintString(55, 2, roles[moveRoleIndex].name);
 		roles[moveRoleIndex].MarkCurrentRole();
 
@@ -198,7 +218,7 @@ void Game::run() {
 			Turn++;
 			PrintString(48, 1, std::to_string(Turn));
 		}
-		
+
 		int useFocus = 0;
 
 		// clear
@@ -238,16 +258,16 @@ void Game::executeMovement(int movePoint) {
 			// display focus points
 			for (int i = 0; i < originMovePoint; i++) {
 				std::string curMovePoint = "";
-				
+
 				if (i < movePoint) curMovePoint += FG_YELLOW;
 				else curMovePoint += FG_GREY;
 
 				curMovePoint += "*" + CLOSE;
 
 				PrintString(56 + i, 4, curMovePoint);
-				
+
 			}
-			
+
 			refreshNeeded = false;
 		}
 		Point originPosition = role.position;
@@ -255,7 +275,7 @@ void Game::executeMovement(int movePoint) {
 		handleEvents(originPosition);
 
 		// let next player's movePoint be clear
-		if(movePoint == 0) PrintString(56, 4, ReturnSpace(20));
+		if (movePoint == 0) PrintString(56, 4, ReturnSpace(20));
 	}
 }
 
@@ -270,7 +290,7 @@ void Game::processPlayerInput(int& movePoint, bool& passFlag, bool& refreshNeede
 		// TODO: Open Inventory
 	}
 	else if (move(press)) {
-		movePoint--;	
+		movePoint--;
 		refreshNeeded = true;
 	}
 }
@@ -318,7 +338,7 @@ void Game::refreshMap() {
 	// system("cls");
 
 	map.printMap(roles, enemyPositionMap, moveRoleIndex);
-	
+
 }
 
 void Game::handleEvents(Point& originPosition) {
@@ -384,7 +404,7 @@ void Game::processShopInput(int& selectIndex, int press) {
 // TODO: add the item to role's bag and reduce the money
 void Game::executePurchase(int selectIndex) {
 	Role& role = roles[moveRoleIndex];
-	
+
 }
 
 bool Game::handleEnemy() {

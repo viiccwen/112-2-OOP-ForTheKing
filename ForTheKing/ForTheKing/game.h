@@ -19,6 +19,7 @@ public:
 	static int Turn;
 
 	Game();
+	bool checkConsoleSize(int requiredRows, int requiredCols);
 	void run();
 	void initRoleAndMap();
 
