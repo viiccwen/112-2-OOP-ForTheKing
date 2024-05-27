@@ -12,19 +12,16 @@ ActiveSkills::ActiveSkills(ActiveSkillType type): Type(type) {
 		name = "Attack";
 		description = "Attack the enemy.";
 		maxFocus = 1;
+		needTarget = true;
+		cooldown = 0;
 		break;
 	case ActiveSkillType::Flee:
 		name = "Flee";
 		description = "Flee from the battle.";
 		maxFocus = 1;
+		needTarget = false;
+		cooldown = 0;
 		break;
-	// test
-	case ActiveSkillType::test:
-		name = "test";
-		description = "test";
-		maxFocus = 5;
-		break;
-	// test
 	case ActiveSkillType::actSkillError:
 		name = "Error";
 		description = "Error";
@@ -57,10 +54,6 @@ bool ActiveSkills::execute(Entity& attacker, Entity& defender, int useFocus, std
 	case ActiveSkillType::Flee:
 		return doFlee( attacker, useFocus, result);
 		break;
-	//test
-	case ActiveSkillType::test:
-		return dotest(attacker, defender, useFocus, result);
-	//test
 	case ActiveSkillType::actSkillError:
 		result = "Error";
 		return false;
@@ -90,13 +83,6 @@ bool doFlee(Entity& attacker, int useFocus, std::string& result) {
 	result = "Flee fail!";
 	return false;
 }
-
-//test
-bool dotest(Entity& attacker, Entity& defender, int useFocus, std::string& result) {
-	result = "test";
-	return true;
-}
-//test
 
 PassiveSkills::PassiveSkills(PassiveSkillType type): Type(type) {
 	switch (type) {

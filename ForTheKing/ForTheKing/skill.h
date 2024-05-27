@@ -10,10 +10,7 @@ enum class ActiveSkillType {
 	Shock_Blast,
 	Heal,
 	SpeedUp,
-	//test
-	test
-	//test
-	,actSkillError
+	actSkillError
 };
 
 enum class PassiveSkillType {
@@ -29,6 +26,8 @@ class Skills {
 public:
 	std::string name;
 	std::string description;
+	bool needTarget;
+	int cooldown;
 
 	Skills();
 	Skills(const std::string& name, const std::string& description);
@@ -58,8 +57,5 @@ public:
 
 bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result);
 bool doFlee(Entity& attacker, int useFocus, std::string& result);
-//test
-bool dotest(Entity& attacker, Entity& defender, int useFocus, std::string& result);
-//test
 
 #endif // !_SKILL_H_

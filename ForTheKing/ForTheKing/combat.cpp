@@ -76,7 +76,6 @@ void Combat::priorityJudge() {
 	}
 	else {
 		attacker = &combatRole.role;
-		//defender = &combatEnemy.enemy;
 		isRoleTurn = true;
 	}
 }
@@ -119,7 +118,8 @@ void Combat::processInput(int& selectIndex, int press) {
 		}
 		else {
 			ActiveSkills skill = combatRole.role.actSkills[selectIndex];
-			defender = &chooseTarget();
+			if(skill.needTarget)
+				defender = &chooseTarget();
 			int useFocus = chooseFocus(skill.maxFocus);
 			skill.execute(*attacker, *defender, useFocus, resultLog);
 		}		
@@ -146,13 +146,8 @@ Entity& Combat::chooseTarget() {
 		}
 
 		int press = ctl.GetInput();
-		if (ctl.isUp(press)) {
-			// TODO: 這裡可以擴展選擇上方敵人
-		}
-		else if (ctl.isDown(press)) {
-			// TODO: 這裡可以擴展選擇下方敵人
-		}
-		else if (ctl.isEnter(press)) {
+		//choose enemy
+		if (ctl.isEnter(press)) {
 			return combatEnemy.enemy;
 		}
 	}
