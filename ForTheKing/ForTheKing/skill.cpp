@@ -151,22 +151,12 @@ int doShock_Blast(ActiveSkills& skill, Entity& attacker, Entity& defender, int u
 }
 
 int doHeal(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result) {
-	if (shootCraps(1, attacker.HitRate, useFocus))
-	{
-		defender.Vitality += 10;
-		result = attacker.name + " heal " + defender.name + " for 10!";
-	}
-	else result = attacker.name + "'s heal fail!";
+	
 	return true;
 }
 
 int doSpeedUp(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result) {
-	if (shootCraps(1, attacker.HitRate, useFocus))
-	{
-		defender.Speed += 10;
-		result = attacker.name + " speed up " + defender.name + " for 10!";
-	}
-	else result = attacker.name + "'s speed up fail!";
+	
 	return true;
 }
 

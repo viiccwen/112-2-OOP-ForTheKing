@@ -53,7 +53,7 @@ public:
 	ActiveSkills();
 	ActiveSkills(ActiveSkillType type,Entity& entity);
 	int (*execute)(ActiveSkills& skill,Entity& attacker, Entity& defender, int useFocus, std::string& resultLog);
-	void refreshSkill();
+	void refreshSkill(Entity& entity);
 };
 
 class PassiveSkills : public Skills {

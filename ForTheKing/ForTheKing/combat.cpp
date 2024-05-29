@@ -44,10 +44,7 @@ void Combat::combatLoop() {
 			int enemyRandomActSkill = rand() % combatEnemy.enemy.actSkills.size();
 			ActiveSkills& skill = combatEnemy.enemy.actSkills[enemyRandomActSkill];
 			skill.execute(skill,combatEnemy.enemy, combatRole.role, 0, resultLog);
-			/*std::cout << '\n' << combatEnemy.enemy.name << " use " << skill.name << '\n';
-			std::cout<<'\n' << resultLog << '\n';*/
 			combatEnemy.moveCount++;
-			//system("pause");
 		}
 		if (resultLog != "") {
 		std::cout<<resultLog<<"\n";
