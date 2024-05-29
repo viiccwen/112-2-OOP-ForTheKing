@@ -56,12 +56,13 @@ void Game::initRoleAndMap() {
 	role2.Focus = role2.MaxFocus = 6;
 	role2.PAttack = role2.MaxPAttack = 24;
 	role2.PDefense = role2.MaxPDefense = 3;
-	role2.MAttack = role2.MaxMAttack = 0;
+	//
+	role2.MAttack = role2.MaxMAttack = 10;
 	role2.MDefense = role2.MaxMDefense = 3;
 	role2.HitRate = role2.MaxHitRate = 80;
 	role2.Speed = role2.MaxSpeed = 80;
 	role2.position = { 50,11 };
-	role2.actSkills = { ActiveSkillType::Attack,ActiveSkillType::Flee};
+	role2.actSkills = { ActiveSkills(ActiveSkillType::Attack,role2),ActiveSkills(ActiveSkillType::Flee,role2),ActiveSkills(ActiveSkillType::Shock_Blast,role2) };
 	enemies[0].position = { 48,9 };
 	map.map[52][13] = SHOP;
 

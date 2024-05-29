@@ -8,7 +8,7 @@ CombatRole::CombatRole(Role& _role) : role(_role), priority(0), moveCount(0)/*, 
 CombatEnemy::CombatEnemy(Enemy& _enemy) : enemy(_enemy), priority(0), moveCount(0), useFocus(0) {
 }
 
-Combat::Combat(Role& _role, Enemy& _enemy) : combatRole(_role), combatEnemy(_enemy) {
+Combat::Combat(Role& _role, Enemy& _enemy) : combatRole(_role), combatEnemy(_enemy){
 	resultLog = "";
 	Combat::combatLoop();
 }
@@ -28,9 +28,13 @@ void Combat::combatLoop() {
 		Combat::showStatus();
 
 		if (isRoleTurn) {
+			if(isRoleMove)
+				Combat::roleNewTurn();
+			Combat::showStatus();
 			Combat::showCombatPanel(selectIndex);
 			int press = ctl.GetInput();
 			processInput(selectIndex, press);
+			isRoleMove = false;
 		}
 		else {
 			if (combatEnemy.enemy.actSkills.size() == 0) {
@@ -38,12 +42,16 @@ void Combat::combatLoop() {
 				combatEnemy.moveCount++;
 			}
 			int enemyRandomActSkill = rand() % combatEnemy.enemy.actSkills.size();
-			ActiveSkills skill = combatEnemy.enemy.actSkills[enemyRandomActSkill];
-			skill.execute(combatEnemy.enemy, combatRole.role, 0, resultLog);
-			std::cout << '\n' << combatEnemy.enemy.name << " use " << skill.name << '\n';
-			std::cout<<'\n' << resultLog << '\n';
+			ActiveSkills& skill = combatEnemy.enemy.actSkills[enemyRandomActSkill];
+			skill.execute(skill,combatEnemy.enemy, combatRole.role, 0, resultLog);
+			/*std::cout << '\n' << combatEnemy.enemy.name << " use " << skill.name << '\n';
+			std::cout<<'\n' << resultLog << '\n';*/
 			combatEnemy.moveCount++;
-			system("pause");
+			//system("pause");
+		}
+		if (resultLog != "") {
+		std::cout<<resultLog<<"\n";
+		system("pause");
 		}
 	}
 }
@@ -76,6 +84,7 @@ void Combat::priorityJudge() {
 	}
 	else {
 		attacker = &combatRole.role;
+		defender = &combatEnemy.enemy;
 		isRoleTurn = true;
 	}
 }
@@ -85,8 +94,15 @@ void Combat::showStatus() {
 
 	std::cout << "Role: " << combatRole.role.name << "\t\t" << "Enemy: " << combatEnemy.enemy.name << '\n';
 	std::cout << "Vitality: " << combatRole.role.Vitality << "\t\t" << "Vitality: " << combatEnemy.enemy.Vitality << '\n';
-	if (isRoleTurn)std::cout << "It's Role's turn!\n\n";
+	if (isRoleTurn)std::cout << "It's Role's turn "<<combatRole.moveCount<<"\n\n";
 	else std::cout << "It's Enemy's turn!\n\n";
+}
+
+void Combat::roleNewTurn() {
+	for (auto& a : combatRole.role.actSkills) {
+		if(a.curCooldown > 0)
+			a.curCooldown--;
+	}
 }
 
 void Combat::showCombatPanel(int selectIndex) {
@@ -100,8 +116,8 @@ void Combat::showCombatPanel(int selectIndex) {
 	}
 }
 
-
-void Combat::processInput(int& selectIndex, int press) {
+bool Combat::processInput(int& selectIndex, int press) {
+	isRoleMove = false;
 	//chose skill
 	if (ctl.isUp(press)) {
 		if (selectIndex > 0)
@@ -114,45 +130,68 @@ void Combat::processInput(int& selectIndex, int press) {
 	//confirm
 	else if (ctl.isEnter(press)) {
 		if (selectIndex == combatRole.role.actSkills.size()){
+			isRoleMove = true;
+			resultLog = "Use item!";
 			// TODO: Use Item
 		}
 		else {
-			ActiveSkills skill = combatRole.role.actSkills[selectIndex];
-			if(skill.needTarget)
-				defender = &chooseTarget();
-			int useFocus = chooseFocus(skill.maxFocus);
-			skill.execute(*attacker, *defender, useFocus, resultLog);
-		}		
-		combatRole.moveCount++;
+			ActiveSkills& skill = combatRole.role.actSkills[selectIndex];
+			isRoleMove = battlePhase(skill);
+		}
+		if(isRoleMove)combatRole.moveCount++;
 	}
-	if (resultLog != "") {
-		std::cout << '\n' << resultLog << '\n';
-		system("pause");
-	}
+	return isRoleMove;
 }
 
-Entity& Combat::chooseTarget() {
+bool Combat::battlePhase(ActiveSkills& skill) {
+	if (skill.curCooldown > 0) {
+		resultLog = "This skill is in cooldown!";
+		return false;
+	}
+	if (skill.needTarget)
+		defender = &chooseTarget(skill);
+	int useFocus = chooseFocus(skill.needDice);
+	if (skill.execute(skill, *attacker, *defender, useFocus, resultLog)) {
+		skill.curCooldown = skill.cooldown;
+		return true;
+	}
+	return false;
+}
+
+Entity& Combat::chooseTarget(ActiveSkills skill) {
 	int selectX = 0;
 	while (true) {
 		showStatus();
 		std::cout << "Choose your target:\n";
 
-		// 顯示敵人名稱
-		if (selectX == 0) {
-			std::cout << FG_YELLOW << combatEnemy.enemy.name << CLOSE << '\n';
+		if (skill.needTarget == 1) {
+			if (selectX == 0) {
+				std::cout << FG_YELLOW << combatEnemy.enemy.name << CLOSE << '\n';
+			}
+			else {
+				std::cout << combatEnemy.enemy.name << '\n';
+			}
 		}
-		else {
-			std::cout << combatEnemy.enemy.name << '\n';
+		else if (skill.needTarget == 2) {
+			if (selectX == 0) {
+				std::cout << FG_YELLOW << combatRole.role.name << CLOSE << '\n';
+			}
+			else {
+				std::cout << combatRole.role.name << '\n';
+			}
 		}
 
 		int press = ctl.GetInput();
-		//choose enemy
 		if (ctl.isEnter(press)) {
-			return combatEnemy.enemy;
+			if (skill.needTarget == 1) {
+				return combatEnemy.enemy;
+			}
+			else if (skill.needTarget == 2) {
+				return combatRole.role;
+			}
 		}
 	}
 }
-
 
 int Combat::chooseFocus(int maxFocus) {
 	int useFocus = 0;

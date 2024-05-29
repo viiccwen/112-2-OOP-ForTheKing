@@ -10,6 +10,7 @@ enum class ActiveSkillType {
 	Shock_Blast,
 	Heal,
 	SpeedUp,
+	Nothing,
 	actSkillError
 };
 
@@ -20,42 +21,54 @@ enum class PassiveSkillType {
 	Fortify
 };
 
+enum class SkillCategoryType {
+	PhysicalAttack,
+	MagicAttack,
+	GiveBuff,
+	GiveDebuff,
+	Buff,
+	Debuff,
+	Other
+};
+
 class Entity;
 
 class Skills {
 public:
 	std::string name;
 	std::string description;
-	bool needTarget;
-	int cooldown;
+	int needDice;
+	SkillCategoryType category;
 
 	Skills();
-	Skills(const std::string& name, const std::string& description);
-	virtual bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) = 0;
 };
 
 class ActiveSkills : public Skills {
 public:
 	ActiveSkillType Type;
-	int maxFocus;
+	int cooldown;
+	int needTarget;//0: no need, 1: need enemy, 2: need role
+	int curCooldown;
 
 	ActiveSkills();
-	ActiveSkills(ActiveSkillType type);
-	ActiveSkills(ActiveSkillType type, const std::string& name, const std::string& description);
-
-	bool execute(Entity& attacker, Entity& defender,int useFocus, std::string& result) override;
+	ActiveSkills(ActiveSkillType type,Entity& entity);
+	int (*execute)(ActiveSkills& skill,Entity& attacker, Entity& defender, int useFocus, std::string& resultLog);
+	void refreshSkill();
 };
 
 class PassiveSkills : public Skills {
 public:
 	PassiveSkillType Type;
 
-	PassiveSkills(PassiveSkillType type);
-	PassiveSkills(PassiveSkillType type, const std::string& name, const std::string& description);
-	bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) override;
+	PassiveSkills(PassiveSkillType type);	
 };
 
-bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result);
-bool doFlee(Entity& attacker, int useFocus, std::string& result);
+int doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//return damage
+int doFlee(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//1: success, 0: fail
+int doProvoke(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//1: success, 0: fail
+int doShock_Blast(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//return damage
+int doHeal(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//return heal
+int doSpeedUp(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);//1: success, 0: fail
+int doNothing(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
 
 #endif // !_SKILL_H_

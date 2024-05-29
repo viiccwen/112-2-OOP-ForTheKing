@@ -40,17 +40,21 @@ public:
 	std::string resultLog;
 	bool isRoleTurn;
 	bool isEnd;
+	bool isRoleMove;
 
 	Combat(Role& role, Enemy& enemy);
 
 	void combatLoop();
 	std::string isCombatEnd();
 	void priorityJudge();
+	void roleNewTurn();
 	void showCombatPanel(int selectIndex);
-	void processInput(int& selectIndex, int press);
+	bool processInput(int& selectIndex, int press);//return true if finish a turn
 	void showStatus();
+	bool battlePhase(ActiveSkills& skill);
 	int chooseFocus(int maxFocus);
-	Entity& chooseTarget();
+	Entity& chooseTarget(ActiveSkills skill);
+	
 };
 
 #endif // !_COMBAT_H_
