@@ -161,6 +161,10 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="skill.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="note.txt" />
+    <Text Include="update.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

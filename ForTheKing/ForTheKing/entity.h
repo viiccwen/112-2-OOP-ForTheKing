@@ -39,6 +39,7 @@ public:
 	std::string name;
 
 	std::vector<ActiveSkills> actSkills;
+	std::vector<Buffs> buffs;
 	Weapon weapon;
 	Armor armor;
 	Accessory accessory;
@@ -46,6 +47,10 @@ public:
 	Point position;
 	Entity();
 	std::string getAttribute(int attributeIndex);
+	void addSkill(ActiveSkills skill);
+	void removeSkill(ActiveSkills skill);
+	void addBuff(Buffs buff);
+	void removeBuff(Buffs buff);
 };
 
 class Role : public Entity {

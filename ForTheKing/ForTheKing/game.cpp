@@ -52,16 +52,17 @@ void Game::initRoleAndMap() {
 	role1.position = { 135,47 };
 
 	Role& role2 = roles[1];
-	role2.Vitality = role2.MaxVitality = 26;
+	role2.Vitality = role2.MaxVitality = 99;//
 	role2.Focus = role2.MaxFocus = 6;
-	role2.PAttack = role2.MaxPAttack = 24;
+	role2.PAttack = role2.MaxPAttack = 10;//
 	role2.PDefense = role2.MaxPDefense = 3;
-	role2.MAttack = role2.MaxMAttack = 0;
+	role2.MAttack = role2.MaxMAttack = 10;//
 	role2.MDefense = role2.MaxMDefense = 3;
 	role2.HitRate = role2.MaxHitRate = 80;
-	role2.Speed = role2.MaxSpeed = 80;
+	role2.Speed = role2.MaxSpeed = 80;//
 	role2.position = { 50,11 };
-	role2.actSkills = { ActiveSkills(ActiveSkillType::Attack,role2),ActiveSkills(ActiveSkillType::Flee,role2),ActiveSkills(ActiveSkillType::Shock_Blast,role2) };
+	role2.actSkills = { ActiveSkillType::Flee,ActiveSkillType::Attack};
+	role2.buffs = {};
 	enemies[0].position = { 48,9 };
 	map.map[52][13] = SHOP;
 
@@ -76,6 +77,7 @@ void Game::initRoleAndMap() {
 	role3.Speed = role3.MaxSpeed = 90;
 	role3.position = { 50,12 };
 	enemies[1].position = { 52,14 };
+
 	map.map[48][10] = SHOP;
 
 

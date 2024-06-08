@@ -1,0 +1,49 @@
+enetity.h
+class Entity
+	+ void addSkill(Skill skill)
+	+ void removeSkill(Skill skill)
+	+ void addBuff(Buff buff)
+	+ void removeBuff(Buff buff)
+	note:	make sure enemy can use skill(at least one skill curcooldown = 0)
+
+skill.h
+	+ DamageType 
+	+ BuffType
+	+ EffectTime
+	+ class Buffs
+	note:	every cooldown or duration should +1 ex: provoke cooldown = 2(doc) -> 3
+			進入戰鬥時如果有中毒狀態會直接受到傷害
+			Provoke沒有Critical事件
+	
+DamagePhase.h
+	+ class DamagePhase
+
+todo 
+	*ActiveSkills Destory
+		remove a equipment randomly
+
+	*BuffType::Run 
+		i don'tunderstand wtf doc says
+
+	*apply skills and buffs when equip equipment
+		wooden sword -> 
+			attack.needDice = 3
+			entity.addSkill(ActiveSkills(ActiveSkillType::SpeedUp))
+		Hammer -> 
+			attack.needDice = 4
+			entity.addSkill(ActiveSkills(ActiveSkillType::Provoke))
+			entity.addBuff(Buff(BuffType::Hammer_Splash, 99999))
+		GiantHammer ->
+			attack.needDice = 5
+			entity.addBuff(Buff(BuffType::Hammer_Splash, 99999))
+		MagicWand ->
+			dice = 3
+			shock-blast
+			entity.addSkill(ActiveSkills(ActiveSkillType::Heal))
+			category = MagicSingleAttack
+		RitualSword ->
+			dice = 1
+			shock-blast
+			category = MagicSingleAttack
+		same others
+

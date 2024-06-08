@@ -30,6 +30,34 @@ std::string Entity::getAttribute(int attributeIndex) {
 	}
 }
 
+void Entity::addSkill(ActiveSkills skill) {
+	if(std::find(actSkills.begin(), actSkills.end(), skill) == actSkills.end())
+		actSkills.push_back(skill);
+}
+
+void Entity::removeSkill(ActiveSkills skill) {
+	if(std::find(actSkills.begin(), actSkills.end(), skill) != actSkills.end())
+		actSkills.erase(std::remove(actSkills.begin(), actSkills.end(), skill), actSkills.end());
+}
+
+void Entity::addBuff(Buffs buff) {
+	if (std::find(buffs.begin(), buffs.end(), buff) == buffs.end())
+		buffs.push_back(buff);
+	else {
+		auto it = std::find(buffs.begin(), buffs.end(), buff);
+		if(buffs[it - buffs.begin()].effectDuration < buff.effectDuration){
+			buffs[it - buffs.begin()].disable(buffs[it - buffs.begin()], *this);
+			buffs.erase(it);
+			buffs.push_back(buff);
+		}
+	}
+}
+
+void Entity::removeBuff(Buffs buff) {
+	if (std::find(buffs.begin(), buffs.end(), buff) != buffs.end())
+		buffs.erase(std::remove(buffs.begin(), buffs.end(), buff), buffs.end());
+}
+
 Role::Role() {
 	index = 0;
 };
@@ -63,7 +91,8 @@ Role::Role(int _index, std::string _name) {
 	armor.Type = ArmorType::None;
 	accessory.Type = AccessoryType::None;
 
-	actSkills = { ActiveSkills(ActiveSkillType::Attack,*this),ActiveSkills(ActiveSkillType::Flee,*this) };
+	actSkills = { ActiveSkillType::Attack,ActiveSkillType::Flee};
+	buffs = {};
 }
 
 Enemy::Enemy() {
@@ -99,5 +128,6 @@ Enemy::Enemy(int _index, std::string _name) {
 	armor.Type = static_cast<ArmorType>(rand() % (5 - 1 + 1) + 1);
 	accessory.Type = static_cast<AccessoryType>(rand() % (3 - 1 + 1) + 1);
 
-	actSkills = { ActiveSkills(ActiveSkillType::Attack,*this) };
+	actSkills = { ActiveSkillType::Attack};
+	buffs = {};
 }
