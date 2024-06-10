@@ -36,6 +36,15 @@ bool Control::isBackspace(const int& press) const {
 bool Control::isEnter(const int& press) const {
 	return press == 13;
 }
+bool Control::isOne(const int& press) const {
+	return press == 49;
+}
+bool Control::isTwo(const int& press) const {
+	return press == 50;
+}
+bool Control::isThree(const int& press) const {
+	return press == 51;
+}
 
 /*
 119 up

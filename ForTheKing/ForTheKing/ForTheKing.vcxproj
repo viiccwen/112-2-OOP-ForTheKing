@@ -159,7 +159,6 @@
     <ClInclude Include="frame.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="item.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="shop.h" />
     <ClInclude Include="skill.h" />

@@ -6,4 +6,6 @@ void MarkCurrentPlayerFrame(int index);
 
 void PrintShopFrame();
 
+void PrintBagSpace();
+
 #endif // !_FRAME_H_

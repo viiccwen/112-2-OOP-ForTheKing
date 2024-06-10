@@ -41,9 +41,9 @@ Role::Role(int _index, std::string _name) {
 	PDefense = MaxPDefense = randomBetween(0, 20, true);
 	MDefense = MaxMDefense = randomBetween(0, 20, true);
 
-	weapon.Type = WeaponType::None;
-	armor.Type = ArmorType::None;
-	accessory.Type = AccessoryType::None;
+	weapon = std::make_shared<Weapon>(WeaponType::None);
+	armor = std::make_shared<Armor>(ArmorType::None);
+	accessory = std::make_shared<Accessory>(AccessoryType::None);
 
 	// TODO
 	// actSkills = { ActiveSkills(ActiveSkillType::Attack) };
@@ -78,10 +78,16 @@ Enemy::Enemy(int _index, std::string _name) {
 	PDefense = MaxPDefense = rand() % 20 + 1;
 	MDefense = MaxMDefense = rand() % 20 + 1;
 
-	weapon.Type = static_cast<WeaponType>(rand() % (5 - 1 + 1) + 1);
-	armor.Type = static_cast<ArmorType>(rand() % (5 - 1 + 1) + 1);
-	accessory.Type = static_cast<AccessoryType>(rand() % (3 - 1 + 1) + 1);
 
+	weapon = std::make_shared<Weapon>(WeaponType::None);
+	armor = std::make_shared<Armor>(ArmorType::None);
+	accessory = std::make_shared<Accessory>(AccessoryType::None);
+	// todo: give enemies equipment
+	/*
+	weapon->Type = static_cast<WeaponType>(rand() % (5 - 1 + 1) + 1);
+	armor->Type = static_cast<ArmorType>(rand() % (5 - 1 + 1) + 1);
+	accessory->Type = static_cast<AccessoryType>(rand() % (3 - 1 + 1) + 1);
+	*/
 	actSkills = {};
 }
 
@@ -96,9 +102,9 @@ std::string Entity::getAttribute(int attributeIndex) {
 	case 6: return std::to_string(MDefense);
 	case 7: return std::to_string(Speed);
 	case 8: return std::to_string(HitRate);
-	case 9: return EquipmentTypeToString(weapon);
-	case 10: return EquipmentTypeToString(armor);
-	case 11: return EquipmentTypeToString(accessory);
+	case 9: return weapon->EquipmentTypeToString();
+	case 10: return armor->EquipmentTypeToString();
+	case 11: return accessory->EquipmentTypeToString();
 	default: return "";
 	}
 }
@@ -122,7 +128,7 @@ void PrintRoleInfo(std::vector<Role>& roles) {
 	for (int roleIdx = 0; roleIdx < roles.size(); roleIdx++) {
 		int roleGap = 41 * roleIdx;
 		for (int attrIdx = 0; attrIdx < attributes.size(); attrIdx++) {
-			PrintString(1 + roleGap, 22 + attrIdx, " " + attributes[attrIdx] + ": " + roles[roleIdx].getAttribute(attrIdx));
+			PrintString(1 + roleGap, 22 + attrIdx, " " + attributes[attrIdx] + ": " + roles[roleIdx].getAttribute(attrIdx) + ReturnSpace(10));
 		}
 	}
 }
