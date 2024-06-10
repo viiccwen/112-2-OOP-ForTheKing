@@ -38,7 +38,7 @@ void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int i
 	// make operator on the top
 	rolePositionMap[{role.position.x, role.position.y}] = role.index;
 
-	
+
 	// map
 	int posY = 1;
 	for (int y = startY; y < endY; y++) {

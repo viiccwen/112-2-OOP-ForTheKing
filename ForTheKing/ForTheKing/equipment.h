@@ -27,26 +27,57 @@ enum class AccessoryType {
 	Bracelet
 };
 
-class Equipment {
+enum class ElseType {
+	TeleportScroll,
+	Godsbeard,
+	GoldenRoot,
+	Tent
+};
 
+class Equipment {
+public:
+	virtual ~Equipment() {}
+	virtual std::string EquipmentTypeToString() const = 0;
 };
 
 class Weapon : public Equipment {
+private:
 public:
 	WeaponType Type;
-	std::string weaponTypeToString();
+	Weapon() : Type(static_cast<WeaponType>(0)) {}
+	Weapon(WeaponType t) : Type(t) {}
+	std::string EquipmentTypeToString() const override;
 };
 
 class Armor : public Equipment {
+private:
 public:
 	ArmorType Type;
-	std::string armorTypeToString();
+	Armor() : Type(static_cast<ArmorType>(0)) {}
+	Armor(ArmorType t) : Type(t) {}
+	std::string EquipmentTypeToString() const override;
 };
 
 class Accessory : public Equipment {
+private:
 public:
 	AccessoryType Type;
-	std::string accessoryTypeToString();
+	Accessory() : Type(static_cast<AccessoryType>(0)) {}
+	Accessory(AccessoryType t) : Type(t) {}
+	std::string EquipmentTypeToString() const override;
 };
+
+class Else : public Equipment {
+private:
+public:
+	ElseType Type;
+	Else(ElseType t) : Type(t) {}
+	std::string EquipmentTypeToString() const override;
+};
+
+std::string EquipmentTypeToString(Weapon weapon);
+std::string EquipmentTypeToString(Armor armor);
+std::string EquipmentTypeToString(Accessory accessory);
+std::string EquipmentTypeToString(Else _else);
 
 #endif // !_EQUIPMENT_H_

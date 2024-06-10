@@ -1,7 +1,8 @@
 #include "Entity.h"
 #include "Equipment.h"
 
-std::string Weapon::weaponTypeToString() {
+
+std::string Weapon::EquipmentTypeToString() const {
 	switch (Type) {
 	case WeaponType::None: return "None";
 	case WeaponType::WoodenSword: return "Wooden Sword";
@@ -13,7 +14,7 @@ std::string Weapon::weaponTypeToString() {
 	}
 }
 
-std::string Armor::armorTypeToString() {
+std::string Armor::EquipmentTypeToString() const {
 	switch (Type) {
 	case ArmorType::None: return "None";
 	case ArmorType::WoodenShield: return "Wooden Shield";
@@ -25,7 +26,7 @@ std::string Armor::armorTypeToString() {
 	}
 }
 
-std::string Accessory::accessoryTypeToString() {
+std::string Accessory::EquipmentTypeToString() const {
 	switch (Type) {
 	case AccessoryType::None: return "None";
 	case AccessoryType::HolyGrail: return "Holy Grail";
@@ -35,69 +36,56 @@ std::string Accessory::accessoryTypeToString() {
 	}
 }
 
-void HaveWeapon(Role& role) {
-	switch (role.weapon.Type)
-	{
-	case WeaponType::WoodenSword:
-		role.PAttack += 5;
-		role.HitRate += 10;
-		break;
-	case WeaponType::Hammer:
-		role.PAttack += 15;
-		role.HitRate -= 15;
-		break;
-	case WeaponType::GiantHammer:
-		role.PAttack += 20;
-		role.HitRate -= 15;
-		break;
-	case WeaponType::MagicWand:
-		role.MAttack += 10;
-		break;
-	case WeaponType::RitualSword:
-		role.MAttack += 15;
-		break;
-	default:
-		break;
+std::string Else::EquipmentTypeToString() const {
+	switch (Type) {
+	case ElseType::Godsbeard: return "Godsbeard";
+	case ElseType::GoldenRoot: return "GoldenRoot";
+	case ElseType::TeleportScroll: return "TeleportScroll";
+	case ElseType::Tent: return "Tent";
+	default: return "Unknown";
 	}
 }
 
-void HaveArmor(Role& role) {
-	switch (role.armor.Type)
-	{
-	case ArmorType::WoodenShield:
-		role.PDefense += 10;
-		break;
-	case ArmorType::PlateArmor:
-		role.PDefense += 20;
-		role.Speed -= 10;
-		break;
-	case ArmorType::LeatherArmor:
-		role.PDefense += 5;
-		break;
-	case ArmorType::Robe:
-		role.MDefense += 10;
-		break;
-	case ArmorType::LaurelWreath:
-		role.MDefense *= 1.1;
-		break;
-	default:
-		break;
+std::string EquipmentTypeToString(Weapon weapon) {
+	switch (weapon.Type) {
+	case WeaponType::None: return "None";
+	case WeaponType::WoodenSword: return "Wooden Sword";
+	case WeaponType::Hammer: return "Hammer";
+	case WeaponType::GiantHammer: return "Giant Hammer";
+	case WeaponType::MagicWand: return "Magic Wand";
+	case WeaponType::RitualSword: return "Ritual Sword";
+	default: return "Unknown";
 	}
 }
 
-void HaveAccessory(Role& role) {
-	switch (role.accessory.Type)
-	{
-	case AccessoryType::HolyGrail:
-		role.MDefense += 30;
-		break;
-	case AccessoryType::Shoes:
-		role.Speed += 5;
-		break;
-	case AccessoryType::Bracelet:
-		role.MaxFocus++;
-		break;
-	default:
-		break;
+std::string EquipmentTypeToString(Armor armor) {
+	switch (armor.Type) {
+	case ArmorType::None: return "None";
+	case ArmorType::WoodenShield: return "Wooden Shield";
+	case ArmorType::PlateArmor: return "Plate Armor";
+	case ArmorType::LeatherArmor: return "Leather Armor";
+	case ArmorType::Robe: return "Robe";
+	case ArmorType::LaurelWreath: return "Laurel Wreath";
+	default: return "Unknown";
+	}
+}
+
+std::string EquipmentTypeToString(Accessory accessory) {
+	switch (accessory.Type) {
+	case AccessoryType::None: return "None";
+	case AccessoryType::HolyGrail: return "Holy Grail";
+	case AccessoryType::Shoes: return "Shoes";
+	case AccessoryType::Bracelet: return "Bracelet";
+	default: return "Unknown";
+	}
+}
+
+std::string EquipmentTypeToString(Else _else) {
+	switch (_else.Type) {
+	case ElseType::Godsbeard: return "Godsbeard";
+	case ElseType::GoldenRoot: return "GoldenRoot";
+	case ElseType::TeleportScroll: return "TeleportScroll";
+	case ElseType::Tent: return "Tent";
+	default: return "Unknown";
 	}
 }

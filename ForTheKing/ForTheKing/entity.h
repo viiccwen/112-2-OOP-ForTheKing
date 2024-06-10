@@ -3,20 +3,16 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "equipment.h"
 #include "skill.h"
-#include "item.h"
 
-
-
-struct Point {
+typedef struct {
 	int x;
 	int y;
-};
+}Point;
 
 class Entity {
-private:
-
 public:
 	int index;
 
@@ -55,10 +51,9 @@ public:
 	Role();
 	Role(int _index, std::string _name);
 	static int Money;
-	static std::vector<Equipment> Bag;
+	static std::vector<std::shared_ptr<Equipment>> Bag;
 
-	void MarkCurrentRole();
-	friend void PrintRoleInfo(std::vector<Role> roles);
+	friend void PrintRoleInfo(std::vector<Role>& roles);
 };
 
 class Enemy : public Entity {
