@@ -8,32 +8,13 @@
 #include "entity.h"
 #include "global.h"
 
-#define ROAD '.'
-#define WALL '#'
-#define SHOP '$'
-#define ENEMY 'E'
-#define EVENT '?'
 
-#define BG_RED static_cast<std::string>("\033[48;2;255;0;0m")
-#define BG_BLUE static_cast<std::string>("\033[48;2;0;0;255m")
-#define BG_YELLOW static_cast<std::string>("\033[48;2;193;156;0m")
-#define BG_GREY static_cast<std::string>("\033[48;2;118;118;118m")
-
-#define FG_RED static_cast<std::string>("\033[38;2;255;0;0m")
-#define FG_YELLOW static_cast<std::string>("\033[38;2;193;156;0m")
-#define FG_BLUE static_cast<std::string>("\033[38;2;0;0;255m")
-#define FG_GREEN static_cast<std::string>("\033[38;2;0;255;0m")
-#define FG_BLACK static_cast<std::string>("\033[38;2;0;0;0m")
-#define FG_GREY static_cast<std::string>("\033[38;2;118;118;118m")
-
-#define CLOSE static_cast<std::string>("\033[0m")
 
 struct PositionMap {
 	std::map<std::pair<int, int>, int> positionMap;
-	
-	PositionMap() {
-	}
-	
+
+	PositionMap() {}
+
 	void addPosition(int x, int y, int index) {
 		positionMap[std::make_pair(x, y)] = index;
 	}
@@ -41,9 +22,9 @@ struct PositionMap {
 
 class Map {
 public:
-	Map();
 	std::vector<std::vector<char>> map;
-	
+
+	Map();
 	void printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index);
 };
 

@@ -1,47 +1,53 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "entity.h"
+#include "global.h"
 #include "map.h"
 #include "control.h"
-#include "combat.h"
+#include "shop.h"
 
 class Game {
 private:
-	Control ctl;
 	Map map;
+	Control ctl;
+	Shop shop;
 	std::vector<Role> roles;
 	std::vector<Enemy> enemies;
 	PositionMap enemyPositionMap;
 
-	int moveRoleIndex;
+	int move_role_index;
 public:
-	static int Turn;
-
 	Game();
-	bool checkConsoleSize(int requiredRows, int requiredCols);
-	void run();
-	void initRoleAndMap();
 
-	bool processFocus(int& useFocus);
-	int shootCraps(int amount, double chance, int useFocus);
-	int calculateMovementPoints(int useFocus);
-	void executeMovement(int movePoint);
-	void processPlayerInput(int& movePoint, bool& passFlag, bool& refreshNeeded);
-	bool move(int press);
-	bool isValidRect(int x, int y);
-	void refreshMap();
+	void InitialRoles();
+	void InitialEnemies();
+	void InitialMapAndPosition();
+	void InitialMovementOrder();
+	void InitalEnemyPositionMap();
 
-	void handleEvents(Point& originPosition);
+	int CalculateMovementPoints();
 
-	void handleShop();
-	void showShopList(int index);
-	void processShopInput(int& selectIndex, int press);
-	void executePurchase(int selectIndex);
-	
-	bool handleEnemy();
-	void showCombatPanel(int selectIndex);
-	bool processEnemyInput(int& selectIndex, int press);
+	int RollDice(int amount, double chance, int use_focus);
+
+	void ExecuteMove(int move_point);
+
+	void HandlePlayerInput(int& move_point, bool& pass_flag, bool& need_fresh);
+	void HandleEvents(Point origin_position, bool& need_refresh);
+	void HandleShopEvnet();
+	void HandlePlayerShopInput(int& select_item_index, int press);
+	void HandlePurchase(int& select_item_index);
+
+	bool IsMoveValid(int press);
+	bool isRectValid(int x, int y);
+
+	void RefreshMap();
+
+	void DisplayMovementPoints(int origin, int current);
+
+	void Run();
+
+	static int Turn;
 };
+
 
 #endif // !_GAME_H_

@@ -33,9 +33,6 @@
     <ClCompile Include="skill.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="item.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -43,6 +40,12 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="global.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="frame.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="shop.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,6 +75,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="shop.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="frame.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
