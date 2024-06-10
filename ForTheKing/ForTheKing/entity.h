@@ -37,9 +37,9 @@ public:
 	std::string name;
 
 	std::vector<ActiveSkills> actSkills;
-	Weapon weapon;
-	Armor armor;
-	Accessory accessory;
+	std::shared_ptr<Weapon> weapon;
+	std::shared_ptr<Armor> armor;
+	std::shared_ptr<Accessory> accessory;
 
 	Point position;
 	Entity();
@@ -54,6 +54,7 @@ public:
 	static std::vector<std::shared_ptr<Equipment>> Bag;
 
 	friend void PrintRoleInfo(std::vector<Role>& roles);
+	friend void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index);
 };
 
 class Enemy : public Entity {

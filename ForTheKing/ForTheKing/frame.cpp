@@ -24,7 +24,6 @@ void PrintWalkFrame() {
 	// current player status
 	PrintString(42, 1, "Turn: ");
 	PrintString(42, 2, "Player name: ");
-	PrintString(42, 3, "use focus: ");
 	PrintString(42, 4, "Action Point: ");
 
 	// Helper
@@ -81,5 +80,13 @@ void PrintShopFrame() {
 	}
 	for (int y = 0; y < 25; y++) {
 		PrintString(49, y, "|");
+	}
+}
+
+void PrintBagSpace() {
+	for (int x = 1; x < GAME_ALL_WIDTH - 1; x++) {
+		for (int y = 1; y <= MAP_HEIGHT; y++) {
+			PrintString(x, y, " ");
+		}
 	}
 }

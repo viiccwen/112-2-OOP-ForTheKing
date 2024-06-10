@@ -16,6 +16,8 @@ private:
 	PositionMap enemyPositionMap;
 
 	int move_role_index;
+	int origin_move_point;
+	int move_point;
 public:
 	Game();
 
@@ -29,20 +31,25 @@ public:
 
 	int RollDice(int amount, double chance, int use_focus);
 
-	void ExecuteMove(int move_point);
+	void ExecuteMove();
 
 	void HandlePlayerInput(int& move_point, bool& pass_flag, bool& need_fresh);
 	void HandleEvents(Point origin_position, bool& need_refresh);
 	void HandleShopEvnet();
-	void HandlePlayerShopInput(int& select_item_index, int press);
+	void HandleBagEvent();
+	void HandleShopInput(int& select_item_index, int press);
+	void HandleBagInput(int& select_index, int press);
 	void HandlePurchase(int& select_item_index);
 
 	bool IsMoveValid(int press);
 	bool isRectValid(int x, int y);
 
 	void RefreshMap();
+	void InitialWalkMode();
 
-	void DisplayMovementPoints(int origin, int current);
+	void DisplayMovementPoints();
+
+	void ChangeEquipment(int& select_index, int player_index);
 
 	void Run();
 

@@ -20,6 +20,9 @@ public:
 	bool isI(const int& press) const;
 	bool isBackspace(const int& press) const;
 	bool isEnter(const int& press) const;
+	bool isOne(const int& press) const;
+	bool isTwo(const int& press) const;
+	bool isThree(const int& press) const;
 };
 
 #endif // !_CONTROL_H_

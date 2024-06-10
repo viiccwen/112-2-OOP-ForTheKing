@@ -120,13 +120,116 @@ bool Game::IsMoveValid(int press) {
 	return false;
 }
 
+// issue: WHY HERE???
+void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index) {
+	int y = 1;
+	for (auto& item : Bag) {
+		std::string bag_str = "";
+		
+		if (select_index == y - 1) bag_str += FG_YELLOW;
+		
+		bag_str += item->EquipmentTypeToString() + CLOSE;
+
+		PrintString(1, y++, bag_str);
+	}
+}
+
+void Game::ChangeEquipment(int& select_index, int player_index) {
+	if (Role::Bag.size() == 0) return;
+
+	auto& equipment = Role::Bag[select_index];
+	auto& player = roles[player_index];
+
+
+	if (auto newWeapon = std::dynamic_pointer_cast<Weapon>(equipment)) {
+
+		// Existing weapon goes to the bag
+		if (player.weapon->EquipmentTypeToString() != "None") {
+			Role::Bag.push_back(player.weapon);  
+		}
+
+		player.weapon = newWeapon; 
+	}
+	else if (auto newArmor = std::dynamic_pointer_cast<Armor>(equipment)) {
+
+		// Existing armor goes to the bag
+		if (player.armor->EquipmentTypeToString() != "None") {
+			Role::Bag.push_back(player.armor);  
+		}
+
+		player.armor = newArmor;  // Equip new armor
+	}
+	else if (auto newAccessory = std::dynamic_pointer_cast<Accessory>(equipment)) {
+
+		// Existing accessory goes to the bag
+		if (player.accessory->EquipmentTypeToString() != "None") {
+			Role::Bag.push_back(player.accessory);  
+		}
+
+		player.accessory = newAccessory;  // Equip new accessory
+	}
+	else {
+		// todo: special item to use (elseType)
+	}
+
+	// remove equipment
+	Role::Bag.erase(Role::Bag.begin() + select_index);
+
+	if (select_index >= Role::Bag.size()) {
+		select_index--;
+	}
+	
+	// update player status
+	PrintRoleInfo(roles);	
+}
+
+void Game::HandleBagInput(int& select_index, int press) {
+	if (ctl.isUp(press)) {
+		if (select_index == 0) return;
+		select_index--;
+	}
+	else if (ctl.isDown(press)) {
+		if (select_index == Role::Bag.size() - 1) return;
+		select_index++;
+	}
+	else if (ctl.isOne(press)) {
+		ChangeEquipment(select_index, 0);
+	}
+	else if (ctl.isTwo(press)) {
+		ChangeEquipment(select_index, 1);
+	}
+	else if (ctl.isThree(press)) {
+		ChangeEquipment(select_index, 2);
+	}
+}
+
+void Game::HandleBagEvent() {
+	PrintBagSpace();
+
+	int select_index = 0;
+	while (true) {
+		// clear item space
+		for (int y = 1; y < 20; y++) 
+			PrintString(1, y, ReturnSpace(30));
+		
+		PrintBagInfo(Role::Bag, select_index);
+
+		int press = ctl.GetInput();
+		if (ctl.isBackspace(press)) break;
+
+		HandleBagInput(select_index, press);
+	}
+
+	InitialWalkMode();
+}
+
 void Game::HandlePlayerInput(int& move_point, bool& pass_flag, bool& need_fresh) {
 	Role& role = roles[move_role_index];
 	int press = ctl.GetInput();
 
 	if (ctl.isP(press)) pass_flag = true;
 	else if (ctl.isI(press)) {
-		// TODO: Open Inventory
+		HandleBagEvent();
 	}
 	else if (IsMoveValid(press)) {
 		move_point--;
@@ -145,7 +248,7 @@ void Game::HandlePurchase(int& select_item_index) {
 	}
 }
 
-void Game::HandlePlayerShopInput(int& select_item_index, int press) {
+void Game::HandleShopInput(int& select_item_index, int press) {
 	if (ctl.isUp(press)) {
 		if (select_item_index == 0) return;
 		select_item_index--;
@@ -170,7 +273,7 @@ void Game::HandleShopEvnet() {
 		int press = ctl.GetInput();
 		if (ctl.isBackspace(press)) break;
 
-		HandlePlayerShopInput(select_item_index, press);
+		HandleShopInput(select_item_index, press);
 	}
 }
 
@@ -179,14 +282,10 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 	char currentRect = map.map[role.position.x][role.position.y];
 	if (currentRect == SHOP) {
 
-		// hotfix: if you don't buy anything and press backspace, then the turn, name will disapear
 		HandleShopEvnet();
 		role.position = origin_position;
 
-		ClearConsole();
-		PrintWalkFrame();
-		MarkCurrentPlayerFrame(move_role_index + 1);
-		PrintRoleInfo(roles);
+		InitialWalkMode();
 		need_refresh = true;
 	}
 	else if (enemyPositionMap.positionMap.find({ role.position.x, role.position.y }) != enemyPositionMap.positionMap.end()) {
@@ -204,11 +303,22 @@ void Game::RefreshMap() {
 	map.printMap(roles, enemyPositionMap, move_role_index);
 }
 
-void Game::DisplayMovementPoints(int origin, int current) {
-	for (int i = 0; i < origin; i++) {
+void Game::InitialWalkMode() {
+	ClearConsole();
+	PrintWalkFrame();
+	RefreshMap();
+	MarkCurrentPlayerFrame(move_role_index + 1);
+	DisplayMovementPoints();
+	PrintString(55, 2, roles[move_role_index].name);
+	PrintString(48, 1, std::to_string(Turn));
+	PrintRoleInfo(roles);
+}
+
+void Game::DisplayMovementPoints() {
+	for (int i = 0; i < origin_move_point; i++) {
 		std::string curMovePoint = "";
 
-		if (i < current) curMovePoint += FG_YELLOW;
+		if (i < move_point) curMovePoint += FG_YELLOW;
 		else curMovePoint += FG_GREY;
 
 		curMovePoint += "*" + CLOSE;
@@ -217,21 +327,21 @@ void Game::DisplayMovementPoints(int origin, int current) {
 	}
 }
 
-void Game::ExecuteMove(int move_point) {
+void Game::ExecuteMove() {
 	Role& role = roles[move_role_index];
 	bool pass_flag = false;
 	bool need_refresh = false;
 
-	int origin_move_point = move_point;
+	origin_move_point = move_point;
 
 	// first display
 	RefreshMap();
-	DisplayMovementPoints(origin_move_point, move_point);
+	DisplayMovementPoints();
 
 	while (move_point && !pass_flag) {
 		if (need_refresh) {
 			RefreshMap();
-			DisplayMovementPoints(origin_move_point, move_point);
+			DisplayMovementPoints();
 			need_refresh = false;
 		}
 
@@ -269,14 +379,16 @@ void Game::Run() {
 
 		if (move_turn % 3 == 0) {
 			Turn++;
-			PrintString(48, 1, std::to_string(Turn));
 		}
+
+		// print turn
+		PrintString(48, 1, std::to_string(Turn));
 
 		// clear name space
 		PrintString(53, 3, ReturnSpace(20));
 
-		int move_point = CalculateMovementPoints();
-		ExecuteMove(move_point);
+		move_point = CalculateMovementPoints();
+		ExecuteMove();
 
 	} while (++move_turn);
 }

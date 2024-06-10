@@ -59,9 +59,6 @@
     <ClInclude Include="skill.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="item.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="map.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
