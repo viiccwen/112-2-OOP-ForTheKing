@@ -4,7 +4,7 @@ Map::Map() {
 	map.assign(140, std::vector<char>(50, '.'));
 }
 
-void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index) {
+void Map::printMap(std::vector<Role>& roles, PositionMap& enemyPositionMap, int index) {
 	Role& role = roles[index];
 
 	int startX = (std::max)(0, role.position.x - 20);
@@ -66,8 +66,13 @@ void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int i
 			{
 				curStr += BG_BLUE + SHOP + CLOSE;
 			}
-			else if (map[x][y] == EVENT) {
+			else if (map[x][y] == EVENT)
+			{
 				curStr += BG_YELLOW + EVENT + CLOSE;
+			}
+			else if (map[x][y] == TENT)
+			{
+				curStr += BG_BLUE + FG_GREEN + TENT + CLOSE;
 			}
 		}
 

@@ -69,6 +69,7 @@ Game::Game() {
 
 	roles.assign(3, Role());
 	enemies.assign(2, Enemy());
+	tent_events = {};
 
 	InitialRoles();
 	InitialEnemies();
@@ -93,7 +94,7 @@ int Game::CalculateMovementPoints() {
 	return RollDice(max_movement_point, role.Speed, 0);
 }
 
-bool Game::isRectValid(int x, int y) {
+bool Game::IsRectValid(int x, int y) {
 	if (x < 0 || x >= 140 || y < 0 || y >= 50) return false;
 	if (map.map[x][y] == WALL) return false;
 	return true;
@@ -101,19 +102,19 @@ bool Game::isRectValid(int x, int y) {
 
 bool Game::IsMoveValid(int press) {
 	Role& role = roles[move_role_index];
-	if (ctl.isUp(press) && isRectValid(role.position.x, role.position.y - 1)) {
+	if (ctl.isUp(press) && IsRectValid(role.position.x, role.position.y - 1)) {
 		role.position.y--;
 		return true;
 	}
-	else if (ctl.isDown(press) && isRectValid(role.position.x, role.position.y + 1)) {
+	else if (ctl.isDown(press) && IsRectValid(role.position.x, role.position.y + 1)) {
 		role.position.y++;
 		return true;
 	}
-	else if (ctl.isLeft(press) && isRectValid(role.position.x - 1, role.position.y)) {
+	else if (ctl.isLeft(press) && IsRectValid(role.position.x - 1, role.position.y)) {
 		role.position.x--;
 		return true;
 	}
-	else if (ctl.isRight(press) && isRectValid(role.position.x + 1, role.position.y)) {
+	else if (ctl.isRight(press) && IsRectValid(role.position.x + 1, role.position.y)) {
 		role.position.x++;
 		return true;
 	}
@@ -134,7 +135,83 @@ void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index)
 	}
 }
 
-void Game::ChangeEquipment(int& select_index, int player_index) {
+bool Game::IsTeleportValid() {
+	Role& role = roles[move_role_index];
+	int x = role.position.x;
+	int y = role.position.y;
+
+	if (x < 0 || x >= 140 || y < 0 || y >= 50) return false;
+	if (map.map[x][y] == WALL) return false;
+	if (map.map[x][y] == SHOP) return false;
+	if (map.map[x][y] == ENEMY) return false;
+	if (map.map[x][y] == EVENT) return false;
+	return true;
+}
+
+void Game::Teleport() {
+	Role& role = roles[move_role_index];
+}
+
+void Game::CheckTentTime() {
+	for (int i = 0; i < tent_events.size(); i++) {
+		if (Turn == tent_events[i].round && move_role_index == tent_events[i].player_index) {
+			map.map[tent_events[i].x][tent_events[i].y] = ROAD;
+
+			tent_events.erase(tent_events.begin() + i);
+			i--;
+		}
+		else {
+			map.map[tent_events[i].x][tent_events[i].y] = TENT;
+		}
+	}
+}
+
+void Game::HandleTentEvent() {
+	Role& role = roles[move_role_index];
+	if (move_point == 0) {
+		// todo : switch to the real situation
+		
+		// test
+		role.Vitality += 50;
+		role.Focus += 5;
+
+		// real
+		// role.Vitality = (role.Vitality + 50 > role.MaxVitality ? role.MaxVitality : role.Vitality + 50);
+		// role.Focus = (role.Focus + 5 > role.MaxFocus ? role.MaxFocus : role.Focus + 5);
+	
+		PrintRoleInfo(roles);
+	}
+}
+
+void Game::PlaceTent() {
+	Role& role = roles[move_role_index];
+	int x = role.position.x;
+	int y = role.position.y;
+
+	tent_events.push_back({ Turn + 1, move_role_index , x, y });
+}
+
+void Game::UseItem(std::shared_ptr<Else> item) {
+	Role& role = roles[move_role_index];
+
+	switch (item->Type) {
+	case ElseType::Godsbeard:
+		role.Vitality = (role.Vitality + 25 > role.MaxVitality ? role.MaxVitality : role.Vitality + 25);
+		break;
+	case ElseType::GoldenRoot:
+		role.Focus = (role.Focus + 3 > role.MaxFocus ? role.MaxFocus : role.Focus + 3);
+		break;
+	case ElseType::TeleportScroll:
+		Teleport();
+		break;
+	case ElseType::Tent:
+		PlaceTent();
+		break;
+	default: break;
+	}
+}
+
+void Game::ApplyEquipment(int& select_index, int player_index) {
 	if (Role::Bag.size() == 0) return;
 
 	auto& equipment = Role::Bag[select_index];
@@ -176,8 +253,8 @@ void Game::ChangeEquipment(int& select_index, int player_index) {
 		player.accessory = newAccessory;  // Equip new accessory
 		applyEquipmentStats(player, newAccessory, true);
 	}
-	else {
-		// todo: special item to use (elseType)
+	else if (auto newItem = std::dynamic_pointer_cast<Else>(equipment)) {
+		UseItem(newItem);
 	}
 
 	// remove equipment
@@ -199,13 +276,13 @@ void Game::HandleBagInput(int& select_index, int press) {
 		select_index++;
 	}
 	else if (ctl.isOne(press)) {
-		ChangeEquipment(select_index, 0);
+		ApplyEquipment(select_index, 0);
 	}
 	else if (ctl.isTwo(press)) {
-		ChangeEquipment(select_index, 1);
+		ApplyEquipment(select_index, 1);
 	}
 	else if (ctl.isThree(press)) {
-		ChangeEquipment(select_index, 2);
+		ApplyEquipment(select_index, 2);
 	}
 }
 
@@ -303,9 +380,15 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 		}
 		*/
 	}
+	else if (currentRect == 'T') {
+		HandleTentEvent();
+	}
 }
 
 void Game::RefreshMap() {
+	// every tent only live for one round.
+	CheckTentTime();
+
 	map.printMap(roles, enemyPositionMap, move_role_index);
 }
 

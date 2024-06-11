@@ -50,6 +50,7 @@ class Role : public Entity {
 public:
 	Role();
 	Role(int _index, std::string _name);
+
 	static int Money;
 	static std::vector<std::shared_ptr<Equipment>> Bag;
 
