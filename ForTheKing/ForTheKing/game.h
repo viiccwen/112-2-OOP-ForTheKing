@@ -49,6 +49,7 @@ public:
 	void HandleTentEvent();
 	void HandleBagEvent();
 	void HandleCombatEvent();
+	void HandleRandomEvent();
 	void HandleShopInput(int& select_item_index, int press);
 	void HandleBagInput(int& select_index, int press);
 	bool HandleCombatInput(int& select_index, int press);
