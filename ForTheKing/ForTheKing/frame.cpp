@@ -90,3 +90,11 @@ void PrintBagSpace() {
 		}
 	}
 }
+
+void PrintCombatEventSpace() {
+	for (int x = 1; x < GAME_ALL_WIDTH - 1; x++) {
+		for (int y = 1; y <= MAP_HEIGHT; y++) {
+			PrintString(x, y, " ");
+		}
+	}
+}
