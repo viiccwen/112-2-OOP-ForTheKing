@@ -188,24 +188,47 @@ void PrintRoleInfo(std::vector<Role>& roles) {
 
 void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply) {
 	int factor = apply ? 1 : -1;
+	auto applySkill = [apply](Role& role, ActiveSkills skill) {
+		if (apply) {
+			role.addSkill(skill);
+		}
+		else {
+			role.removeSkill(skill);
+		}
+	};
+	auto applyBuff = [apply](Role& role, BuffType buff) {
+		if (apply) {
+			role.addBuff(Buffs(buff, 99999));
+		}
+		else {
+			role.removeBuff(Buffs(buff, 99999));
+		}
+	};
 	switch (weapon->Type) {
 	case WeaponType::WoodenSword:
 		role.PAttack += 5 * factor;
 		role.HitRate += 10 * factor;
+		applySkill(role, ActiveSkillType::SpeedUp);
 		break;
 	case WeaponType::Hammer:
 		role.PAttack += 15 * factor;
 		role.HitRate -= 15 * factor;
+		applyBuff(role, BuffType::Hammer_Splash);
+		applySkill(role, ActiveSkillType::Provoke);
 		break;
 	case WeaponType::GiantHammer:
 		role.PAttack += 20 * factor;
 		role.HitRate -= 15 * factor;
+		applyBuff(role, BuffType::Hammer_Splash);
 		break;
 	case WeaponType::MagicWand:
 		role.MAttack += 10 * factor;
+		applySkill(role, ActiveSkillType::Shock_Blast);
+		applySkill(role, ActiveSkillType::Heal);
 		break;
 	case WeaponType::RitualSword:
 		role.MAttack += 15 * factor;
+		applySkill(role, ActiveSkillType::Shock_Blast);
 		break;
 	default:
 		break;
@@ -214,16 +237,27 @@ void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply)
 
 void applyEquipmentStats(Role& role, std::shared_ptr<Armor> armor, bool apply) {
 	int factor = apply ? 1 : -1;
+	auto applyBuff = [apply](Role& role, BuffType buff) {
+		if (apply) {
+			role.addBuff(Buffs(buff, 99999));
+		}
+		else {
+			role.removeBuff(Buffs(buff, 99999));
+		}
+	};
 	switch (armor->Type) {
 	case ArmorType::WoodenShield:
 		role.PDefense += 10 * factor;
+		role.addSkill(ActiveSkillType::Provoke);
 		break;
 	case ArmorType::PlateArmor:
 		role.PDefense += 20 * factor;
 		role.Speed -= 10 * factor;
+		applyBuff(role, BuffType::Fortify);
 		break;
 	case ArmorType::LeatherArmor:
 		role.PDefense += 5 * factor;
+		applyBuff(role, BuffType::Fortify);
 		break;
 	case ArmorType::Robe:
 		role.MDefense += 10 * factor;
@@ -239,12 +273,30 @@ void applyEquipmentStats(Role& role, std::shared_ptr<Armor> armor, bool apply) {
 
 void applyEquipmentStats(Role& role, std::shared_ptr<Accessory> accessory, bool apply) {
 	int factor = apply ? 1 : -1;
+	auto applySkill = [apply](Role& role, ActiveSkills skill) {
+		if (apply) {
+			role.addSkill(skill);
+		}
+		else {
+			role.removeSkill(skill);
+		}
+	};
+	auto applyBuff = [apply](Role& role, BuffType buff) {
+		if (apply) {
+			role.addBuff(Buffs(buff, 99999));
+		}
+		else {
+			role.removeBuff(Buffs(buff, 99999));
+		}
+	};
 	switch (accessory->Type) {
 	case AccessoryType::HolyGrail:
 		role.MDefense += 30 * factor;
+		applySkill(role, ActiveSkillType::Heal);
 		break;
 	case AccessoryType::Shoes:
 		role.Speed += 5 * factor;
+		applyBuff(role, BuffType::Run);
 		break;
 	case AccessoryType::Bracelet:
 		role.MaxFocus += 1 * factor;
