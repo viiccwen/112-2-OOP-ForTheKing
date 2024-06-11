@@ -50,11 +50,16 @@ class Role : public Entity {
 public:
 	Role();
 	Role(int _index, std::string _name);
+
 	static int Money;
 	static std::vector<std::shared_ptr<Equipment>> Bag;
 
 	friend void PrintRoleInfo(std::vector<Role>& roles);
 	friend void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index);
+
+	friend void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply);
+	friend void applyEquipmentStats(Role& role, std::shared_ptr<Armor> armor, bool apply);
+	friend void applyEquipmentStats(Role& role, std::shared_ptr<Accessory> accessory, bool apply);
 };
 
 class Enemy : public Entity {

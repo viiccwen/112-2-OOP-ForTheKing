@@ -20,6 +20,29 @@ Role::Role(int _index, std::string _name) {
 	index = _index;
 	name = _name;
 
+	// **testing**
+	Vitality = MaxVitality = randomBetween(30, 100);
+
+	// 3
+	Focus = MaxFocus = 3;
+
+	// [30, 55)
+	Speed = MaxSpeed = randomBetween(30, 100);
+
+	//[40, 60)
+	HitRate = MaxHitRate = randomBetween(40, 100);
+
+	// [5, 15]
+	PAttack = MaxPAttack = randomBetween(5, 15, true);
+	MAttack = MaxMAttack = randomBetween(5, 15, true);
+
+	// [0, 20]
+	PDefense = MaxPDefense = randomBetween(0, 20, true);
+	MDefense = MaxMDefense = randomBetween(0, 20, true);
+	
+	// **real**
+
+	/* 
 	//  int x = rand() % (max - min + 1) + min;
 	// [30, 45)
 	Vitality = MaxVitality = randomBetween(30, 45);
@@ -40,7 +63,7 @@ Role::Role(int _index, std::string _name) {
 	// [0, 20]
 	PDefense = MaxPDefense = randomBetween(0, 20, true);
 	MDefense = MaxMDefense = randomBetween(0, 20, true);
-
+	*/
 	weapon = std::make_shared<Weapon>(WeaponType::None);
 	armor = std::make_shared<Armor>(ArmorType::None);
 	accessory = std::make_shared<Accessory>(AccessoryType::None);
@@ -130,5 +153,73 @@ void PrintRoleInfo(std::vector<Role>& roles) {
 		for (int attrIdx = 0; attrIdx < attributes.size(); attrIdx++) {
 			PrintString(1 + roleGap, 22 + attrIdx, " " + attributes[attrIdx] + ": " + roles[roleIdx].getAttribute(attrIdx) + ReturnSpace(10));
 		}
+	}
+}
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (weapon->Type) {
+	case WeaponType::WoodenSword:
+		role.PAttack += 5 * factor;
+		role.HitRate += 10 * factor;
+		break;
+	case WeaponType::Hammer:
+		role.PAttack += 15 * factor;
+		role.HitRate -= 15 * factor;
+		break;
+	case WeaponType::GiantHammer:
+		role.PAttack += 20 * factor;
+		role.HitRate -= 15 * factor;
+		break;
+	case WeaponType::MagicWand:
+		role.MAttack += 10 * factor;
+		break;
+	case WeaponType::RitualSword:
+		role.MAttack += 15 * factor;
+		break;
+	default:
+		break;
+	}
+}
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Armor> armor, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (armor->Type) {
+	case ArmorType::WoodenShield:
+		role.PDefense += 10 * factor;
+		break;
+	case ArmorType::PlateArmor:
+		role.PDefense += 20 * factor;
+		role.Speed -= 10 * factor;
+		break;
+	case ArmorType::LeatherArmor:
+		role.PDefense += 5 * factor;
+		break;
+	case ArmorType::Robe:
+		role.MDefense += 10 * factor;
+		break;
+	case ArmorType::LaurelWreath:
+		if (apply) role.MDefense *= 1.1;
+		else role.MDefense /= 1.1;  // maybe need more specific way to handle
+		break;
+	default:
+		break;
+	}
+}
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Accessory> accessory, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (accessory->Type) {
+	case AccessoryType::HolyGrail:
+		role.MDefense += 30 * factor;
+		break;
+	case AccessoryType::Shoes:
+		role.Speed += 5 * factor;
+		break;
+	case AccessoryType::Bracelet:
+		role.MaxFocus += 1 * factor;
+		break;
+	default:
+		break;
 	}
 }

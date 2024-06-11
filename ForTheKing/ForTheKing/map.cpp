@@ -4,7 +4,7 @@ Map::Map() {
 	map.assign(140, std::vector<char>(50, '.'));
 }
 
-void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index) {
+void Map::printMap(std::vector<Role>& roles, PositionMap& enemyPositionMap, int index, bool teleport_mode) {
 	Role& role = roles[index];
 
 	int startX = (std::max)(0, role.position.x - 20);
@@ -44,7 +44,11 @@ void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int i
 	for (int y = startY; y < endY; y++) {
 		std::string curStr = "";
 		for (int x = startX; x < endX; x++) {
-			if (rolePositionMap.find({ x, y }) != rolePositionMap.end()) {
+			if (teleport_mode && x == role.position.x && y == role.position.y)
+			{
+				curStr += BG_BLUE + FG_GREEN + TELEPORT + CLOSE;
+			}
+			else if (rolePositionMap.find({ x, y }) != rolePositionMap.end()) {
 				curStr += BG_YELLOW;
 				if (rolePositionMap[{x, y}] == role.index) {
 					curStr += FG_GREEN;
@@ -66,8 +70,13 @@ void Map::printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int i
 			{
 				curStr += BG_BLUE + SHOP + CLOSE;
 			}
-			else if (map[x][y] == EVENT) {
+			else if (map[x][y] == EVENT)
+			{
 				curStr += BG_YELLOW + EVENT + CLOSE;
+			}
+			else if (map[x][y] == TENT) 
+			{
+				curStr += BG_BLUE + FG_GREEN + TENT + CLOSE;
 			}
 		}
 

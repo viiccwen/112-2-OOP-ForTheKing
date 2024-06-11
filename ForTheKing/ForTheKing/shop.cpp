@@ -11,7 +11,7 @@ Shop::Shop() {
 	item_value.push_back(50);
 	item_value.push_back(100);
 	item_value.push_back(150);
-	item_value.push_back(2000);
+	item_value.push_back(230);
 
 	// weapon
 	item_lists.push_back(std::make_shared <Weapon>(WeaponType::WoodenSword));

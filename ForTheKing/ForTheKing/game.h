@@ -6,6 +6,13 @@
 #include "control.h"
 #include "shop.h"
 
+struct TentEvent {
+	int round;
+	int player_index;
+	int x;
+	int y;
+};
+
 class Game {
 private:
 	Map map;
@@ -18,6 +25,9 @@ private:
 	int move_role_index;
 	int origin_move_point;
 	int move_point;
+	bool teleport_mode;
+	bool teleport_escape;
+	std::vector<TentEvent> tent_events;
 public:
 	Game();
 
@@ -36,20 +46,29 @@ public:
 	void HandlePlayerInput(int& move_point, bool& pass_flag, bool& need_fresh);
 	void HandleEvents(Point origin_position, bool& need_refresh);
 	void HandleShopEvnet();
+	void HandleTentEvent();
 	void HandleBagEvent();
 	void HandleShopInput(int& select_item_index, int press);
 	void HandleBagInput(int& select_index, int press);
 	void HandlePurchase(int& select_item_index);
 
 	bool IsMoveValid(int press);
-	bool isRectValid(int x, int y);
+	bool IsRectValid(int x, int y);
 
 	void RefreshMap();
 	void InitialWalkMode();
 
 	void DisplayMovementPoints();
 
-	void ChangeEquipment(int& select_index, int player_index);
+	void ApplyEquipment(int& select_index, int player_index);
+	void UseItem(std::shared_ptr<Else> item);
+
+	bool IsTeleportValid(int x, int y, bool pressing);
+	bool IsTeleportMoveValid(int press);
+	void HandleTeleportPlayerInput(bool& need_fresh);
+	void Teleport();
+	void CheckTentTime();
+	void PlaceTent();
 
 	void Run();
 

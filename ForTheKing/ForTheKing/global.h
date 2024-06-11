@@ -58,6 +58,8 @@
 #define SHOP '$'
 #define ENEMY 'E'
 #define EVENT '?'
+#define TENT 'T'
+#define TELEPORT 'X'
 
 #define BG_RED static_cast<std::string>("\033[48;2;255;0;0m")
 #define BG_BLUE static_cast<std::string>("\033[48;2;0;0;255m")
