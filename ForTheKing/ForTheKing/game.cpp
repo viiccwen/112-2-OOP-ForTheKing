@@ -544,7 +544,7 @@ void Game::ExecuteMove() {
 	// if there is no action move point
 	if (origin_move_point == 0) {
 		PrintString(56, 4, "No action move point!");
-		Sleep(2000);
+		system("cls");
 	}
 
 	// clear move_point space
