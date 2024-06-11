@@ -1,7 +1,7 @@
 #include "game.h"
 #include "frame.h"
 #include "shop.h"
-
+#include "combat.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -221,8 +221,8 @@ void Game::CheckTentTime() {
 void Game::HandleTentEvent() {
 	Role& role = roles[move_role_index];
 	if (move_point == 0) {
-		 role.Vitality = (role.Vitality + 50 > role.MaxVitality ? role.MaxVitality : role.Vitality + 50);
-		 role.Focus = (role.Focus + 5 > role.MaxFocus ? role.MaxFocus : role.Focus + 5);
+		role.Vitality = (role.Vitality + 50 > role.MaxVitality ? role.MaxVitality : role.Vitality + 50);
+		role.Focus = (role.Focus + 5 > role.MaxFocus ? role.MaxFocus : role.Focus + 5);
 
 		PrintRoleInfo(roles);
 	}
@@ -421,7 +421,7 @@ void Game::HandleCombatEvent() {
 		PrintString(1, 1, attack);
 		PrintString(1, 2, back);
 		int press = ctl.GetInput();
-		if (HandleCombatInput(select_index, press)) 
+		if (HandleCombatInput(select_index, press))
 			break;
 	}
 }
@@ -445,7 +445,10 @@ bool Game::HandleCombatInput(int& select_index, int press) {
 void Game::HandleCombat(int& select_index) {
 	if (select_index == 0) {
 		// todo: combat
-
+		Role& roleR = roles[move_role_index];
+		auto t1 = enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}];
+		auto t2 = enemies[t1-1];
+		Combat combat(roleR, t2);
 	}
 }
 
@@ -461,7 +464,7 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 		need_refresh = true;
 	}
 	else if (enemyPositionMap.positionMap.find({ role.position.x, role.position.y }) != enemyPositionMap.positionMap.end()) {
-		
+
 		HandleCombatEvent();
 		role.position = origin_position;
 
