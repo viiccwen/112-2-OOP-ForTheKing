@@ -446,9 +446,7 @@ void Game::HandleCombat(int& select_index) {
 	if (select_index == 0) {
 		// todo: combat
 		Role& roleR = roles[move_role_index];
-		auto t1 = enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}];
-		auto t2 = enemies[t1-1];
-		Combat combat(roleR, t2);
+		Combat combat(roleR, enemies[enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}] - 1]);
 	}
 }
 
