@@ -14,7 +14,6 @@ public:
 	Role& role;
 	double priority;
 	int moveCount;
-	int useFocus;
 
 	CombatRole(Role& _role);
 };
@@ -40,15 +39,23 @@ public:
 	std::string resultLog;
 	bool isRoleTurn;
 	bool isEnd;
+	bool isTurnChange;
 
 	Combat(Role& role, Enemy& enemy);
 
 	void combatLoop();
 	std::string isCombatEnd();
 	void priorityJudge();
+	void roleNewTurn(Entity& entity);
 	void showCombatPanel(int selectIndex);
-	void processInput(int& selectIndex, int press);
+	bool processInput(int& selectIndex, int press);
 	void showStatus();
+	bool battlePhase(ActiveSkills& skill);
+	int chooseFocus(int maxFocus);
+	Entity& chooseTarget(ActiveSkills skill);
+	void effectAutoBuff();
+	void effectTurnStartBuff(Entity& entity,bool &isdizzy);
+	void turnEnd();
 };
 
 #endif // !_COMBAT_H_
