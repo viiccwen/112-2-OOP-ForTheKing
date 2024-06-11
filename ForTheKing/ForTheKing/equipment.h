@@ -1,6 +1,8 @@
 #ifndef _EQUIPMENT_H_
 #define _EQUIPMENT_H_
+
 #include <string>
+#include <memory>
 
 enum class WeaponType {
 	None,
@@ -38,6 +40,7 @@ class Equipment {
 public:
 	virtual ~Equipment() {}
 	virtual std::string EquipmentTypeToString() const = 0;
+	bool isNone() const;
 };
 
 class Weapon : public Equipment {
@@ -74,10 +77,5 @@ public:
 	Else(ElseType t) : Type(t) {}
 	std::string EquipmentTypeToString() const override;
 };
-
-std::string EquipmentTypeToString(Weapon weapon);
-std::string EquipmentTypeToString(Armor armor);
-std::string EquipmentTypeToString(Accessory accessory);
-std::string EquipmentTypeToString(Else _else);
 
 #endif // !_EQUIPMENT_H_
