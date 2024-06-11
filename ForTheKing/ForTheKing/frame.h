@@ -12,4 +12,5 @@ void PrintCombatEventSpace();
 
 void PrintUseItemFrame();
 
+void PrintCombatFrame();
 #endif // !_FRAME_H_
