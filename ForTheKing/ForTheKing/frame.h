@@ -8,4 +8,6 @@ void PrintShopFrame();
 
 void PrintBagSpace();
 
+void PrintCombatEventSpace();
+
 #endif // !_FRAME_H_
