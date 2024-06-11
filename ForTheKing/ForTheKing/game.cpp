@@ -190,7 +190,6 @@ void Game::Teleport() {
 
 	InitialWalkMode();
 
-	// todo teleport to somewhere
 	while (true) {
 		if (need_fresh) {
 			RefreshMap();
@@ -336,6 +335,9 @@ void Game::HandleBagInput(int& select_index, int press) {
 	}
 	else if (ctl.isThree(press)) {
 		ApplyEquipment(select_index, 2);
+	}
+	else if (ctl.isEnter(press)) {
+		ApplyEquipment(select_index, move_role_index);
 	}
 }
 

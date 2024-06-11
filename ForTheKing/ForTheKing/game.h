@@ -64,8 +64,8 @@ public:
 	void UseItem(std::shared_ptr<Else> item);
 
 	bool IsTeleportValid(int x, int y, bool pressing);
-	void HandleTeleportPlayerInput(bool& need_fresh);
 	bool IsTeleportMoveValid(int press);
+	void HandleTeleportPlayerInput(bool& need_fresh);
 	void Teleport();
 	void CheckTentTime();
 	void PlaceTent();
