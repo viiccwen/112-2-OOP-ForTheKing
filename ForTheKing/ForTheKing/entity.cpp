@@ -20,6 +20,29 @@ Role::Role(int _index, std::string _name) {
 	index = _index;
 	name = _name;
 
+	// **testing**
+	Vitality = MaxVitality = randomBetween(30, 100);
+
+	// 3
+	Focus = MaxFocus = 3;
+
+	// [30, 55)
+	Speed = MaxSpeed = randomBetween(30, 100);
+
+	//[40, 60)
+	HitRate = MaxHitRate = randomBetween(40, 100);
+
+	// [5, 15]
+	PAttack = MaxPAttack = randomBetween(5, 15, true);
+	MAttack = MaxMAttack = randomBetween(5, 15, true);
+
+	// [0, 20]
+	PDefense = MaxPDefense = randomBetween(0, 20, true);
+	MDefense = MaxMDefense = randomBetween(0, 20, true);
+	
+	// **real**
+
+	/* 
 	//  int x = rand() % (max - min + 1) + min;
 	// [30, 45)
 	Vitality = MaxVitality = randomBetween(30, 45);
@@ -40,7 +63,7 @@ Role::Role(int _index, std::string _name) {
 	// [0, 20]
 	PDefense = MaxPDefense = randomBetween(0, 20, true);
 	MDefense = MaxMDefense = randomBetween(0, 20, true);
-
+	*/
 	weapon = std::make_shared<Weapon>(WeaponType::None);
 	armor = std::make_shared<Armor>(ArmorType::None);
 	accessory = std::make_shared<Accessory>(AccessoryType::None);

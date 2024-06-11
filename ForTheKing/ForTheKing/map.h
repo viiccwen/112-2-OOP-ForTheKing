@@ -25,7 +25,7 @@ public:
 	std::vector<std::vector<char>> map;
 
 	Map();
-	void printMap(std::vector<Role> roles, PositionMap& enemyPositionMap, int index);
+	void printMap(std::vector<Role>& roles, PositionMap& enemyPositionMap, int index, bool teleport_mode = false);
 };
 
 #endif // !_MAP_H_
