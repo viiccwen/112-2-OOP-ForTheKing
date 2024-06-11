@@ -450,6 +450,14 @@ void Game::HandleCombat(int& select_index) {
 	}
 }
 
+void Game::HandleRandomEvent() {
+	PrintString(42, 6, "CONGRATS!! You got 999!");
+	Role::Money += 999;
+	Sleep(1500);
+	PrintString(42, 6, ReturnSpace(30));
+
+}
+
 void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 	Role& role = roles[move_role_index];
 	char currentRect = map.map[role.position.x][role.position.y];
@@ -468,15 +476,12 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 
 		InitialWalkMode();
 		need_refresh = true;
-		/*
-		bool isFlee = handleEnemy();
-		if (isFlee) {
-			role.position = originPosition;
-		}
-		*/
 	}
 	else if (currentRect == TENT) {
 		HandleTentEvent();
+	}
+	else if (currentRect == EVENT) {
+		HandleRandomEvent();
 	}
 }
 
