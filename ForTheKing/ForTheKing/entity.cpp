@@ -132,3 +132,71 @@ void PrintRoleInfo(std::vector<Role>& roles) {
 		}
 	}
 }
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (weapon->Type) {
+	case WeaponType::WoodenSword:
+		role.PAttack += 5 * factor;
+		role.HitRate += 10 * factor;
+		break;
+	case WeaponType::Hammer:
+		role.PAttack += 15 * factor;
+		role.HitRate -= 15 * factor;
+		break;
+	case WeaponType::GiantHammer:
+		role.PAttack += 20 * factor;
+		role.HitRate -= 15 * factor;
+		break;
+	case WeaponType::MagicWand:
+		role.MAttack += 10 * factor;
+		break;
+	case WeaponType::RitualSword:
+		role.MAttack += 15 * factor;
+		break;
+	default:
+		break;
+	}
+}
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Armor> armor, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (armor->Type) {
+	case ArmorType::WoodenShield:
+		role.PDefense += 10 * factor;
+		break;
+	case ArmorType::PlateArmor:
+		role.PDefense += 20 * factor;
+		role.Speed -= 10 * factor;
+		break;
+	case ArmorType::LeatherArmor:
+		role.PDefense += 5 * factor;
+		break;
+	case ArmorType::Robe:
+		role.MDefense += 10 * factor;
+		break;
+	case ArmorType::LaurelWreath:
+		if (apply) role.MDefense *= 1.1;
+		else role.MDefense /= 1.1;  // maybe need more specific way to handle
+		break;
+	default:
+		break;
+	}
+}
+
+void applyEquipmentStats(Role& role, std::shared_ptr<Accessory> accessory, bool apply) {
+	int factor = apply ? 1 : -1;
+	switch (accessory->Type) {
+	case AccessoryType::HolyGrail:
+		role.MDefense += 30 * factor;
+		break;
+	case AccessoryType::Shoes:
+		role.Speed += 5 * factor;
+		break;
+	case AccessoryType::Bracelet:
+		role.MaxFocus += 1 * factor;
+		break;
+	default:
+		break;
+	}
+}

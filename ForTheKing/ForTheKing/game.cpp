@@ -125,9 +125,9 @@ void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index)
 	int y = 1;
 	for (auto& item : Bag) {
 		std::string bag_str = "";
-		
+
 		if (select_index == y - 1) bag_str += FG_YELLOW;
-		
+
 		bag_str += item->EquipmentTypeToString() + CLOSE;
 
 		PrintString(1, y++, bag_str);
@@ -140,33 +140,41 @@ void Game::ChangeEquipment(int& select_index, int player_index) {
 	auto& equipment = Role::Bag[select_index];
 	auto& player = roles[player_index];
 
-
 	if (auto newWeapon = std::dynamic_pointer_cast<Weapon>(equipment)) {
 
 		// Existing weapon goes to the bag
-		if (player.weapon->EquipmentTypeToString() != "None") {
-			Role::Bag.push_back(player.weapon);  
+		if (!player.weapon->isNone()) {
+			// take it to the bag
+			Role::Bag.push_back(player.weapon);
+
+			// remove effect of the equipment now
+			applyEquipmentStats(player, player.weapon, false);
 		}
 
-		player.weapon = newWeapon; 
+		player.weapon = newWeapon;
+		applyEquipmentStats(player, newWeapon, true);
 	}
 	else if (auto newArmor = std::dynamic_pointer_cast<Armor>(equipment)) {
 
 		// Existing armor goes to the bag
-		if (player.armor->EquipmentTypeToString() != "None") {
-			Role::Bag.push_back(player.armor);  
+		if (!player.armor->isNone()) {
+			Role::Bag.push_back(player.armor);
+			applyEquipmentStats(player, player.armor, false);
 		}
 
 		player.armor = newArmor;  // Equip new armor
+		applyEquipmentStats(player, newArmor, true);
 	}
 	else if (auto newAccessory = std::dynamic_pointer_cast<Accessory>(equipment)) {
 
 		// Existing accessory goes to the bag
-		if (player.accessory->EquipmentTypeToString() != "None") {
-			Role::Bag.push_back(player.accessory);  
+		if (!player.accessory->isNone()) {
+			Role::Bag.push_back(player.accessory);
+			applyEquipmentStats(player, player.accessory, false);
 		}
 
 		player.accessory = newAccessory;  // Equip new accessory
+		applyEquipmentStats(player, newAccessory, true);
 	}
 	else {
 		// todo: special item to use (elseType)
@@ -175,12 +183,10 @@ void Game::ChangeEquipment(int& select_index, int player_index) {
 	// remove equipment
 	Role::Bag.erase(Role::Bag.begin() + select_index);
 
-	if (select_index >= Role::Bag.size()) {
-		select_index--;
-	}
-	
+	if (select_index >= Role::Bag.size()) select_index--;
+
 	// update player status
-	PrintRoleInfo(roles);	
+	PrintRoleInfo(roles);
 }
 
 void Game::HandleBagInput(int& select_index, int press) {
@@ -209,9 +215,9 @@ void Game::HandleBagEvent() {
 	int select_index = 0;
 	while (true) {
 		// clear item space
-		for (int y = 1; y < 20; y++) 
+		for (int y = 1; y < 20; y++)
 			PrintString(1, y, ReturnSpace(30));
-		
+
 		PrintBagInfo(Role::Bag, select_index);
 
 		int press = ctl.GetInput();
@@ -315,16 +321,16 @@ void Game::InitialWalkMode() {
 }
 
 void Game::DisplayMovementPoints() {
+	std::string curMovePoint = "";
 	for (int i = 0; i < origin_move_point; i++) {
-		std::string curMovePoint = "";
-
 		if (i < move_point) curMovePoint += FG_YELLOW;
 		else curMovePoint += FG_GREY;
 
 		curMovePoint += "*" + CLOSE;
 
-		PrintString(56 + i, 4, curMovePoint);
 	}
+	curMovePoint += ReturnSpace(30);
+	PrintString(56, 4, curMovePoint);
 }
 
 void Game::ExecuteMove() {
