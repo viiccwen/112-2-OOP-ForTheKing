@@ -9,14 +9,36 @@ enum class ActiveSkillType {
 	Provoke,
 	Shock_Blast,
 	Heal,
-	SpeedUp
+	SpeedUp,
+	Nothing
 };
 
-enum class PassiveSkillType {
+enum class DamageType {
+	PhysicalSingalAttack,
+	MagicSingalAttack,
+	PhysicalMultiAttack,
+	MagicMultiAttack,
+	None
+};
+
+enum class BuffType {
+	//passive skills
 	Run,
 	Hammer_Splash,
 	Destroy,
-	Fortify
+	Fortify,
+	//buff debuff
+	Angry,
+	Dizziness,
+	Poisoned,
+	SpeedUp
+};
+
+enum class EffectTime {
+	Auto,
+	TurnStart,
+	BeforeDamagePhase,
+	AfterDamagePhase
 };
 
 class Entity;
@@ -27,31 +49,61 @@ public:
 	std::string description;
 
 	Skills();
-	Skills(const std::string& name, const std::string& description);
-	virtual bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) = 0;
 };
 
 class ActiveSkills : public Skills {
 public:
 	ActiveSkillType Type;
+	DamageType category;
+
+	int cooldown;
+	int needDice;
+	int needTarget;//0: no need, 1: need enemy, 2: need role
+	int curCooldown;
 
 	ActiveSkills();
 	ActiveSkills(ActiveSkillType type);
-	ActiveSkills(ActiveSkillType type, const std::string& name, const std::string& description);
-
-	bool execute(Entity& attacker, Entity& defender,int useFocus, std::string& result) override;
+	bool (*execute)(ActiveSkills& skill,Entity& attacker, Entity& defender, int useFocus, std::string& resultLog);
+	bool operator==(const ActiveSkills& other) const {
+		return this->Type == other.Type;
+	}
 };
 
-class PassiveSkills : public Skills {
+class Buffs :public Skills {
 public:
-	PassiveSkillType Type;
+	BuffType Type;
 
-	PassiveSkills(PassiveSkillType type);
-	PassiveSkills(PassiveSkillType type, const std::string& name, const std::string& description);
-	bool execute(Entity& attacker, Entity& defender, int useFocus, std::string& result) override;
+	EffectTime effectTime;
+	int delta;
+	int effectDuration;
+	Buffs();
+	Buffs(BuffType type, int duration);
+	bool (*execute)(Buffs& buff, Entity& attacker);
+	bool (*disable)(Buffs& buff, Entity& attacker);
+	bool operator==(const Buffs& other) const {
+		return this->Type == other.Type;
+	}
 };
 
-bool doAttack(Entity& attacker, Entity& defender, int useFocus, std::string& result);
-bool doFlee(Entity& attacker, int useFocus, std::string& result);
+int shootCraps(int amont, double chance, int useFocus);
+
+bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doFlee(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doProvoke(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doShock_Blast(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doHeal(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doSpeedUp(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doNothing(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+
+//todo implement run 
+bool doRun(Buffs& buff, Entity& attacker);
+//todo implement destroy random remove enemy's equipment
+bool doDestroy(Buffs& buff, Entity& attacker);
+bool doPoisoned(Buffs& buff, Entity& attacker);
+bool doSpeedUp(Buffs& buff, Entity& attacker);
+
+bool disableRun(Buffs& buff, Entity& attacker);
+bool disableSpeedUp(Buffs& buff, Entity& attacker);
+bool doNothing(Buffs& buff, Entity& attacker);
 
 #endif // !_SKILL_H_

@@ -5,22 +5,23 @@
 #include "map.h"
 #include "control.h"
 #include "skill.h"
+#include "frame.h"
+#include "global.h"
 
 class Role;
 class Entity;
 
-class CombatRole{
+class CombatRole {
 public:
 	Role& role;
 	double priority;
 	int moveCount;
-	int useFocus;
 
 	CombatRole(Role& _role);
 };
 
 class CombatEnemy {
-	public:
+public:
 	Enemy& enemy;
 	double priority;
 	int moveCount;
@@ -40,15 +41,28 @@ public:
 	std::string resultLog;
 	bool isRoleTurn;
 	bool isEnd;
+	bool isTurnChange;
 
 	Combat(Role& role, Enemy& enemy);
 
 	void combatLoop();
 	std::string isCombatEnd();
 	void priorityJudge();
+	void roleNewTurn(Entity& entity);
 	void showCombatPanel(int selectIndex);
-	void processInput(int& selectIndex, int press);
+	bool processInput(int& selectIndex, int press);
 	void showStatus();
+	bool battlePhase(ActiveSkills& skill);
+	int chooseFocus(int maxFocus);
+	Entity& chooseTarget(ActiveSkills skill);
+	void effectAutoBuff();
+	void effectTurnStartBuff(Entity& entity, bool& isdizzy);
+	void turnEnd();
+
+	bool HandleUseItemEvent();
+	bool HandleUseItemInput(int& select_index, int press, std::vector<std::pair<std::shared_ptr<Else>, int>> items);
+	void HandleUseItem(std::shared_ptr<Else> item);
+
 };
 
 #endif // !_COMBAT_H_

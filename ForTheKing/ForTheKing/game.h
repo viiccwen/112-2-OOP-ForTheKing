@@ -45,13 +45,15 @@ public:
 
 	void HandlePlayerInput(int& move_point, bool& pass_flag, bool& need_fresh);
 	void HandleEvents(Point origin_position, bool& need_refresh);
-	void HandleShopEvnet();
+	void HandleShopEvent();
 	void HandleTentEvent();
 	void HandleBagEvent();
+	void HandleCombatEvent();
 	void HandleShopInput(int& select_item_index, int press);
 	void HandleBagInput(int& select_index, int press);
+	bool HandleCombatInput(int& select_index, int press);
 	void HandlePurchase(int& select_item_index);
-
+	void HandleCombat(int& select_index);
 	bool IsMoveValid(int press);
 	bool IsRectValid(int x, int y);
 

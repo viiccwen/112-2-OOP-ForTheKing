@@ -48,6 +48,9 @@
     <ClCompile Include="shop.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="damagePhase.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -80,5 +83,12 @@
     <ClInclude Include="frame.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="damagePhase.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="note.txt" />
+    <Text Include="update.txt" />
   </ItemGroup>
 </Project>
