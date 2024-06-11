@@ -444,9 +444,16 @@ bool Game::HandleCombatInput(int& select_index, int press) {
 
 void Game::HandleCombat(int& select_index) {
 	if (select_index == 0) {
-		// todo: combat
 		Role& roleR = roles[move_role_index];
 		Combat combat(roleR, enemies[enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}] - 1]);
+		
+		for (int i = 0; i < enemyPositionMap.positionMap.size(); i++) {
+			if (enemies[i].Vitality <= 0) {
+				map.map[enemies[i].position.x][enemies[i].position.y] = ROAD;
+				enemyPositionMap.positionMap.erase({ enemies[i].position.x , enemies[i].position.y });
+			}
+		}
+		
 	}
 }
 
@@ -455,7 +462,7 @@ void Game::HandleRandomEvent() {
 	Role::Money += 999;
 	Sleep(1500);
 	PrintString(42, 6, ReturnSpace(30));
-
+	map.map[roles[move_role_index].position.x][roles[move_role_index].position.y] = ROAD;
 }
 
 void Game::HandleEvents(Point origin_position, bool& need_refresh) {
@@ -472,7 +479,10 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 	else if (enemyPositionMap.positionMap.find({ role.position.x, role.position.y }) != enemyPositionMap.positionMap.end()) {
 
 		HandleCombatEvent();
-		role.position = origin_position;
+		
+		if (map.map[role.position.x][role.position.y] == ENEMY) {
+			role.position = origin_position;
+		}
 
 		InitialWalkMode();
 		need_refresh = true;
@@ -544,7 +554,7 @@ void Game::ExecuteMove() {
 	// if there is no action move point
 	if (origin_move_point == 0) {
 		PrintString(56, 4, "No action move point!");
-		system("cls");
+		Sleep(2000);
 	}
 
 	// clear move_point space

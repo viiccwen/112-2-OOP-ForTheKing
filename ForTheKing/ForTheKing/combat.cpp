@@ -157,55 +157,115 @@ void Combat::priorityJudge() {
 
 
 void Combat::showStatus() {
-	PrintString(1, 1, "Role: " + combatRole.role.name);
-	PrintString(1, 2, "Vitality: " + std::to_string(combatRole.role.Vitality));
-	PrintString(1, 3, "Focus: " + std::to_string(combatRole.role.Focus));
-	PrintString(1, 4, "Speed: " + std::to_string(combatRole.role.Speed));
-	PrintString(1, 5, "PAttack: " + std::to_string(combatRole.role.PAttack));
-	PrintString(1, 6, "PDefense: " + std::to_string(combatRole.role.PDefense));
-	PrintString(1, 7, "MAttack: " + std::to_string(combatRole.role.MAttack));
-	PrintString(1, 8, "MDefense: " + std::to_string(combatRole.role.MDefense));
-	PrintString(1, 9, "HitRate: " + std::to_string(combatRole.role.HitRate));
-	PrintString(1, 10, "Priority: " + std::to_string(combatRole.priority));
-	PrintString(1, 11, "MoveCount: " + std::to_string(combatRole.moveCount));
-	
+	std::string cur_str = "";
+
+	// Role information
+	cur_str = "Role: " + combatRole.role.name;
+	PrintString(1, 1, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Vitality: " + std::to_string(combatRole.role.Vitality);
+	PrintString(1, 2, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Focus: " + std::to_string(combatRole.role.Focus);
+	PrintString(1, 3, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Speed: " + std::to_string(combatRole.role.Speed);
+	PrintString(1, 4, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PAttack: " + std::to_string(combatRole.role.PAttack);
+	PrintString(1, 5, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PDefense: " + std::to_string(combatRole.role.PDefense);
+	PrintString(1, 6, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MAttack: " + std::to_string(combatRole.role.MAttack);
+	PrintString(1, 7, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MDefense: " + std::to_string(combatRole.role.MDefense);
+	PrintString(1, 8, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "HitRate: " + std::to_string(combatRole.role.HitRate);
+	PrintString(1, 9, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Priority: " + std::to_string(combatRole.priority);
+	PrintString(1, 10, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MoveCount: " + std::to_string(combatRole.moveCount);
+	PrintString(1, 11, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	// Role's actSkills
 	PrintString(1, 13, "Role's actSkills: ");
 	int i = 0;
 	for (i = 0; i < combatRole.role.actSkills.size(); i++) {
 		auto a = combatRole.role.actSkills[i];
-		PrintString(1, 14 + i, a.name + " cooldown: " + std::to_string(a.curCooldown));
+		cur_str = a.name + " cooldown: " + std::to_string(a.curCooldown);
+		PrintString(1, 14 + i, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
+
 	int next = 14 + i + 1;
 	PrintString(1, next, "Role's buff: ");
+	for (int i = next + 1; i < 24; i++) {
+		PrintString(1, next + 1, ReturnSpace(23));
+	}
 	for (int i = 0; i < combatRole.role.buffs.size(); i++) {
 		auto a = combatRole.role.buffs[i];
-		PrintString(1, next + i + 1, a.name + " duration " + std::to_string(a.effectDuration));
+		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		PrintString(1, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
 
 
-	PrintString(76, 1, "Enemy: " + combatEnemy.enemy.name);
-	PrintString(76, 2, "Vitality: " + std::to_string(combatEnemy.enemy.Vitality));
-	PrintString(76, 3, "Focus: " + std::to_string(combatEnemy.enemy.Focus));
-	PrintString(76, 4, "Speed: " + std::to_string(combatEnemy.enemy.Speed));
-	PrintString(76, 5, "PAttack: " + std::to_string(combatEnemy.enemy.PAttack));
-	PrintString(76, 6, "PDefense: " + std::to_string(combatEnemy.enemy.PDefense));
-	PrintString(76, 7, "MAttack: " + std::to_string(combatEnemy.enemy.MAttack));
-	PrintString(76, 8, "MDefense: " + std::to_string(combatEnemy.enemy.MDefense));
-	PrintString(76, 9, "HitRate: " + std::to_string(combatEnemy.enemy.HitRate));
-	PrintString(76, 10, "Priority: " + std::to_string(combatEnemy.priority));
-	PrintString(76, 11, "MoveCount: " + std::to_string(combatEnemy.moveCount));
+	// Enemy information
+	cur_str = "Enemy: " + combatEnemy.enemy.name;
+	PrintString(76, 1, cur_str + ReturnSpace(23 - cur_str.size()));
 
+	cur_str = "Vitality: " + std::to_string(combatEnemy.enemy.Vitality);
+	PrintString(76, 2, cur_str + ReturnSpace(23 - cur_str.size()));
 
+	cur_str = "Focus: " + std::to_string(combatEnemy.enemy.Focus);
+	PrintString(76, 3, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Speed: " + std::to_string(combatEnemy.enemy.Speed);
+	PrintString(76, 4, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PAttack: " + std::to_string(combatEnemy.enemy.PAttack);
+	PrintString(76, 5, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PDefense: " + std::to_string(combatEnemy.enemy.PDefense);
+	PrintString(76, 6, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MAttack: " + std::to_string(combatEnemy.enemy.MAttack);
+	PrintString(76, 7, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MDefense: " + std::to_string(combatEnemy.enemy.MDefense);
+	PrintString(76, 8, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "HitRate: " + std::to_string(combatEnemy.enemy.HitRate);
+	PrintString(76, 9, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Priority: " + std::to_string(combatEnemy.priority);
+	PrintString(76, 10, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MoveCount: " + std::to_string(combatEnemy.moveCount);
+	PrintString(76, 11, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	// Enemy's actSkills
 	PrintString(76, 13, "Enemy's actSkills: ");
 	for (i = 0; i < combatEnemy.enemy.actSkills.size(); i++) {
 		auto a = combatEnemy.enemy.actSkills[i];
-		PrintString(76, 14 + i, a.name + " cooldown: " + std::to_string(a.curCooldown));
+		cur_str = a.name + " cooldown: " + std::to_string(a.curCooldown);
+		PrintString(76, 14 + i, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
+	// 25
 	next = 14 + i + 1;
 	PrintString(76, next, "Enemy's buff: ");
+	for (int i = next + 1; i < 24; i++) {
+		PrintString(76, i, ReturnSpace(23));
+	}
+
 	for (int i = 0; i < combatEnemy.enemy.buffs.size(); i++) {
 		auto a = combatEnemy.enemy.buffs[i];
-		PrintString(76, next + i + 1, a.name + " duration " + std::to_string(a.effectDuration));
+		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		PrintString(76, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
 
 	if (isRoleTurn) PrintString(25, 11, "It's Role's turn " + std::to_string(combatRole.moveCount));
@@ -219,7 +279,7 @@ void Combat::roleNewTurn(Entity& entity) {
 	}
 	for (auto& a : entity.buffs) {
 		a.effectDuration--;
-		if (a.effectDuration == 0) {
+		if (a.effectDuration <= 0) {
 			a.disable(a, entity);
 			entity.removeBuff(a);
 		}

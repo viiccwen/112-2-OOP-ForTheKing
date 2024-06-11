@@ -30,7 +30,7 @@ void PrintWalkFrame() {
 	std::string wall = "wall: " + BG_GREY + WALL + CLOSE;
 	std::string road = "road: " + BG_YELLOW + FG_BLACK + ROAD + CLOSE;
 	std::string shop = "shop: " + BG_BLUE + SHOP + CLOSE;
-	std::string _event = "event: " + BG_RED + ENEMY + CLOSE;
+	std::string _event = "enemy: " + BG_RED + ENEMY + CLOSE;
 	std::vector<std::string> helper = {
 	"--------------------------------------Helper-------------------------------------",
 	"adjust focus: (A), (D)",

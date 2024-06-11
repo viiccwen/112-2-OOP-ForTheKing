@@ -18,7 +18,8 @@ DamagePhase::DamagePhase(Entity& attacker, Entity& defender, int& damage, Damage
 		result += " (Critical)";
 	}
 	effectBeforeDamageBuff(attacker, defender, damage, category, isCritical);
-	defender.Vitality -= damage;
+	if (defender.Vitality - damage < 0) defender.Vitality = 0;
+	else defender.Vitality -= damage;
 	effectAfterDamageBuff(attacker, defender);
 }
 

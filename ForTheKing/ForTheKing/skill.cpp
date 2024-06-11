@@ -96,6 +96,9 @@ bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFo
 	double chance = attacker.HitRate;
 	if (haveBuff(attacker, BuffType::Angry))
 		chance *= 0.7;
+	
+	// todo: critical
+	// int win = skill.needDice;
 	int win = shootCraps(skill.needDice, chance, useFocus);
 	int damage = 0;
 	bool isCritical = false;
@@ -103,7 +106,7 @@ bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFo
 		result = attacker.name + "'s Attack fail!";
 		return true;
 	}
-	else if (win == skill.needDice && skill.needDice > 1) {//Critical
+	else if (win == skill.needDice) {//Critical
 		damage = attack;
 		isCritical = true;
 	}
@@ -245,7 +248,7 @@ Buffs::Buffs(BuffType type, int duration) : Type(type), effectDuration(duration)
 		break;
 	case BuffType::SpeedUp:
 		name = "Speed Up";
-		description = "Increase 50% Stat::Spee.";
+		description = "Increase 50% Stat::Speed.";
 		effectTime = EffectTime::Auto;
 		execute = doSpeedUp;
 		disable = disableSpeedUp;
