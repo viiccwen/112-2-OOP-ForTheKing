@@ -33,6 +33,8 @@ void Game::InitialMapAndPosition() {
 	map.map[139][47] = WALL;
 	map.map[138][48] = EVENT;
 	map.map[133][45] = SHOP;
+	map.map[48][9] = ENEMY;
+	map.map[52][14] = ENEMY;
 
 
 	roles[0].position = { 135,47 };
@@ -135,21 +137,72 @@ void PrintBagInfo(std::vector<std::shared_ptr<Equipment>> Bag, int select_index)
 	}
 }
 
-bool Game::IsTeleportValid() {
-	Role& role = roles[move_role_index];
-	int x = role.position.x;
-	int y = role.position.y;
-
+bool Game::IsTeleportValid(int x, int y, bool pressing) {
 	if (x < 0 || x >= 140 || y < 0 || y >= 50) return false;
-	if (map.map[x][y] == WALL) return false;
-	if (map.map[x][y] == SHOP) return false;
-	if (map.map[x][y] == ENEMY) return false;
-	if (map.map[x][y] == EVENT) return false;
+
+	if (pressing) {
+		if (map.map[x][y] == WALL) return false;
+		if (map.map[x][y] == SHOP) return false;
+		if (map.map[x][y] == ENEMY) return false;
+		if (map.map[x][y] == EVENT) return false;
+	}
 	return true;
+}
+
+bool Game::IsTeleportMoveValid(int press) {
+	Role& role = roles[move_role_index];
+	if (ctl.isUp(press) && IsTeleportValid(role.position.x, role.position.y - 1, false)) {
+		role.position.y--;
+		return true;
+	}
+	else if (ctl.isDown(press) && IsTeleportValid(role.position.x, role.position.y + 1, false)) {
+		role.position.y++;
+		return true;
+	}
+	else if (ctl.isLeft(press) && IsTeleportValid(role.position.x - 1, role.position.y, false)) {
+		role.position.x--;
+		return true;
+	}
+	else if (ctl.isRight(press) && IsTeleportValid(role.position.x + 1, role.position.y, false)) {
+		role.position.x++;
+		return true;
+	}
+	return false;
+}
+
+void Game::HandleTeleportPlayerInput(bool& need_fresh) {
+	Role& role = roles[move_role_index];
+	int press = ctl.GetInput();
+	
+	if (ctl.isEnter(press) && IsTeleportValid(role.position.x, role.position.y, true)) {
+		teleport_escape = true;
+	}
+	else if (IsTeleportMoveValid(press)) {
+		need_fresh = true;
+	}
 }
 
 void Game::Teleport() {
 	Role& role = roles[move_role_index];
+	
+	bool need_fresh = true;
+	teleport_mode = true;
+
+	InitialWalkMode();
+
+	// todo teleport to somewhere
+	while (true) {
+		if (need_fresh) {
+			RefreshMap();
+			need_fresh = false;
+		}
+
+		HandleTeleportPlayerInput(need_fresh);
+
+		if (teleport_escape) break;
+	}
+
+	teleport_mode = false;
 }
 
 void Game::CheckTentTime() {
@@ -170,7 +223,7 @@ void Game::HandleTentEvent() {
 	Role& role = roles[move_role_index];
 	if (move_point == 0) {
 		// todo : switch to the real situation
-		
+
 		// test
 		role.Vitality += 50;
 		role.Focus += 5;
@@ -178,7 +231,7 @@ void Game::HandleTentEvent() {
 		// real
 		// role.Vitality = (role.Vitality + 50 > role.MaxVitality ? role.MaxVitality : role.Vitality + 50);
 		// role.Focus = (role.Focus + 5 > role.MaxFocus ? role.MaxFocus : role.Focus + 5);
-	
+
 		PrintRoleInfo(roles);
 	}
 }
@@ -301,6 +354,10 @@ void Game::HandleBagEvent() {
 		if (ctl.isBackspace(press)) break;
 
 		HandleBagInput(select_index, press);
+		if (teleport_escape) {
+			teleport_escape = false;
+			break;
+		}
 	}
 
 	InitialWalkMode();
@@ -389,7 +446,7 @@ void Game::RefreshMap() {
 	// every tent only live for one round.
 	CheckTentTime();
 
-	map.printMap(roles, enemyPositionMap, move_role_index);
+	map.printMap(roles, enemyPositionMap, move_role_index, teleport_mode);
 }
 
 void Game::InitialWalkMode() {

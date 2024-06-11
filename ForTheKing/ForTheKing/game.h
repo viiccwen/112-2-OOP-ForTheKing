@@ -25,6 +25,8 @@ private:
 	int move_role_index;
 	int origin_move_point;
 	int move_point;
+	bool teleport_mode;
+	bool teleport_escape;
 	std::vector<TentEvent> tent_events;
 public:
 	Game();
@@ -61,7 +63,9 @@ public:
 	void ApplyEquipment(int& select_index, int player_index);
 	void UseItem(std::shared_ptr<Else> item);
 
-	bool IsTeleportValid();
+	bool IsTeleportValid(int x, int y, bool pressing);
+	void HandleTeleportPlayerInput(bool& need_fresh);
+	bool IsTeleportMoveValid(int press);
 	void Teleport();
 	void CheckTentTime();
 	void PlaceTent();
