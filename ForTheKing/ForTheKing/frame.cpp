@@ -98,3 +98,23 @@ void PrintCombatEventSpace() {
 		}
 	}
 }
+
+void PrintUseItemFrame() {
+	for (int x = 0; x < GAME_ALL_WIDTH; x++) {
+		for (int y = 0; y < GAME_ALL_HEIGHT; y++) {
+			PrintString(x, y, " ");
+		}
+	}
+	for (int x = 0; x < 50; x++) {
+		PrintString(x, 0, "-");
+	}
+	for (int x = 0; x < 50; x++) {
+		PrintString(x, 24, "-");
+	}
+	for (int y = 0; y < 25; y++) {
+		PrintString(0, y, "|");
+	}
+	for (int y = 0; y < 25; y++) {
+		PrintString(49, y, "|");
+	}
+}

@@ -5,11 +5,13 @@
 #include "map.h"
 #include "control.h"
 #include "skill.h"
+#include "frame.h"
+#include "global.h"
 
 class Role;
 class Entity;
 
-class CombatRole{
+class CombatRole {
 public:
 	Role& role;
 	double priority;
@@ -19,7 +21,7 @@ public:
 };
 
 class CombatEnemy {
-	public:
+public:
 	Enemy& enemy;
 	double priority;
 	int moveCount;
@@ -54,8 +56,13 @@ public:
 	int chooseFocus(int maxFocus);
 	Entity& chooseTarget(ActiveSkills skill);
 	void effectAutoBuff();
-	void effectTurnStartBuff(Entity& entity,bool &isdizzy);
+	void effectTurnStartBuff(Entity& entity, bool& isdizzy);
 	void turnEnd();
+
+	bool HandleUseItemEvent();
+	bool HandleUseItemInput(int& select_index, int press, std::vector<std::pair<std::shared_ptr<Else>, int>> items);
+	void HandleUseItem(std::shared_ptr<Else> item);
+
 };
 
 #endif // !_COMBAT_H_
