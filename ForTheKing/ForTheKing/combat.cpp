@@ -86,9 +86,21 @@ void Combat::combatLoop() {
 			}
 		}
 		if (!resultLog.empty()) {
-			std::cout << resultLog << "\n";
+			PrintString(25, 9, resultLog);
+			PrintString(25, 23, "");
 			system("pause");
+
+			PrintString(25, 8, ReturnSpace(50));
+			PrintString(25, 9, ReturnSpace(50));
+			PrintString(25, 23, ReturnSpace(50));
 		}
+
+		if (NeedRefreshFrame) {
+			system("pause");
+			PrintCombatFrame();
+			NeedRefreshFrame = false;
+		}
+
 		Combat::turnEnd();//avoid overdose effect
 	}
 }
@@ -304,7 +316,8 @@ bool Combat::processInput(int& selectIndex, int press) {
 		if (selectIndex == combatRole.role.actSkills.size()) {
 			isTurnChange = HandleUseItemEvent();
 			if (isTurnChange) {
-				resultLog = "Use item!";
+				PrintString(50, 1, "use item!");
+				NeedRefreshFrame = true;
 			}
 		}
 		else {
@@ -331,32 +344,35 @@ bool Combat::battlePhase(ActiveSkills& skill) {
 	}
 	return false;
 }
-// todo : change to PrintString
+
 Entity& Combat::chooseTarget(ActiveSkills skill) {
 	int selectX = 0;
 	while (true) {
 		showStatus();
-		std::cout << "Choose your target:\n";
+		PrintString(25, 8, "Choose your target:");
 
 		if (skill.needTarget == 1) {
 			if (selectX == 0) {
-				std::cout << FG_YELLOW << combatEnemy.enemy.name << CLOSE << '\n';
+				PrintString(25, 9, FG_YELLOW + combatEnemy.enemy.name + CLOSE);
 			}
 			else {
-				std::cout << combatEnemy.enemy.name << '\n';
+				PrintString(25, 9, combatEnemy.enemy.name);
 			}
 		}
 		else if (skill.needTarget == 2) {
 			if (selectX == 0) {
-				std::cout << FG_YELLOW << combatRole.role.name << CLOSE << '\n';
+				PrintString(25, 9, FG_YELLOW + combatRole.role.name + CLOSE);
 			}
 			else {
-				std::cout << combatRole.role.name << '\n';
+				PrintString(25, 9, combatRole.role.name);
 			}
 		}
 
 		int press = ctl.GetInput();
 		if (ctl.isEnter(press)) {
+			PrintString(25, 8, ReturnSpace(50));
+			PrintString(25, 9, ReturnSpace(50));
+
 			if (skill.needTarget == 1) {
 				return combatEnemy.enemy;
 			}
@@ -368,25 +384,26 @@ Entity& Combat::chooseTarget(ActiveSkills skill) {
 }
 
 
-// todo : change to PrintString
 int Combat::chooseFocus(int maxFocus) {
 	int useFocus = 0;
 	while (true) {
 		showStatus();
-		std::cout << "(You have " << combatRole.role.Focus - useFocus << " focus left)\n";
+		PrintString(25, 8, "(You have " + std::to_string(combatRole.role.Focus - useFocus) + " focus left)");
+
+		std::string focus_str = "";
 		for (int i = 0; i < combatRole.role.MaxFocus; i++) {
 			if (i < useFocus) {
-				std::cout << FG_RED;
+				focus_str += FG_RED;
 			}
 			else if (i + 1 > combatRole.role.Focus) {
-				std::cout << FG_GREY;
+				focus_str += FG_GREY;
 			}
 			else {
-				std::cout << FG_YELLOW;
+				focus_str += FG_YELLOW;
 			}
-			std::cout << '*' << CLOSE;
+			focus_str += '*' + CLOSE;
 		}
-		std::cout << '\n';
+		PrintString(25, 9, focus_str);
 
 		int press = ctl.GetInput();
 		if (ctl.isRight(press)) {

@@ -42,6 +42,7 @@ public:
 	bool isRoleTurn;
 	bool isEnd;
 	bool isTurnChange;
+	bool NeedRefreshFrame;
 
 	Combat(Role& role, Enemy& enemy);
 
