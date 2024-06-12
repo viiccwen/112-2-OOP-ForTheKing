@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "global.h"
 
+// todo: change it to 600
 int Role::Money = 600;
 std::vector<std::shared_ptr<Equipment>> Role::Bag = {};
 
@@ -49,16 +50,18 @@ Role::Role(int _index, std::string _name) {
 	name = _name;
 
 	// **testing**
+	/*
+	// [30, 45)
 	Vitality = MaxVitality = randomBetween(30, 100);
 
 	// 3
 	Focus = MaxFocus = 3;
 
 	// [30, 55)
-	Speed = MaxSpeed = randomBetween(30, 100);
+	Speed = MaxSpeed = randomBetween(99, 100);
 
 	//[40, 60)
-	HitRate = MaxHitRate = randomBetween(40, 100);
+	HitRate = MaxHitRate = randomBetween(99, 100);
 
 	// [5, 15]
 	PAttack = MaxPAttack = randomBetween(5, 15, true);
@@ -67,10 +70,10 @@ Role::Role(int _index, std::string _name) {
 	// [0, 20]
 	PDefense = MaxPDefense = randomBetween(0, 20, true);
 	MDefense = MaxMDefense = randomBetween(0, 20, true);
-
+	*/
 	// **real**
 
-	/*
+	
 	//  int x = rand() % (max - min + 1) + min;
 	// [30, 45)
 	Vitality = MaxVitality = randomBetween(30, 45);
@@ -91,7 +94,7 @@ Role::Role(int _index, std::string _name) {
 	// [0, 20]
 	PDefense = MaxPDefense = randomBetween(0, 20, true);
 	MDefense = MaxMDefense = randomBetween(0, 20, true);
-	*/
+	
 	weapon = std::make_shared<Weapon>(WeaponType::None);
 	armor = std::make_shared<Armor>(ArmorType::None);
 	accessory = std::make_shared<Accessory>(AccessoryType::None);
@@ -110,26 +113,25 @@ Enemy::Enemy(int _index, std::string _name) {
 	index = _index;
 	name = _name;
 
-	//  int x = rand() % (max - min + 1) + min;
 	// [30, 45)
-	Vitality = MaxVitality = rand() % (45 - 30) + 30;
+	Vitality = MaxVitality = randomBetween(30, 45);
 
 	// 3
 	Focus = MaxFocus = 3;
 
 	// [30, 55)
-	Speed = MaxSpeed = rand() % (55 - 30) + 30;
+	Speed = MaxSpeed = randomBetween(30, 55);
 
 	//[40, 60)
-	HitRate = MaxHitRate = rand() % (60 - 40) + 40;
+	HitRate = MaxHitRate = randomBetween(40, 60);
 
 	// [5, 15]
-	PAttack = MaxPAttack = rand() % (15 - 5 + 1) + 5;
-	MAttack = MaxMAttack = rand() % (15 - 5 + 1) + 5;
+	PAttack = MaxPAttack = randomBetween(5, 15, true);
+	MAttack = MaxMAttack = randomBetween(5, 15, true);
 
 	// [0, 20]
-	PDefense = MaxPDefense = rand() % 20 + 1;
-	MDefense = MaxMDefense = rand() % 20 + 1;
+	PDefense = MaxPDefense = randomBetween(0, 20, true);
+	MDefense = MaxMDefense = randomBetween(0, 20, true);
 
 
 	weapon = std::make_shared<Weapon>(WeaponType::None);

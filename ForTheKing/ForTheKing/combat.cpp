@@ -16,11 +16,13 @@ Combat::Combat(Role& _role, Enemy& _enemy) : combatRole(_role), combatEnemy(_ene
 void Combat::combatLoop() {
 	int selectIndex = 0;
 	bool isDizzy = false;
+
+	PrintCombatFrame();
 	while (true) {
 		resultLog = Combat::isCombatEnd();
 		if (isEnd) {
 			Combat::showStatus();
-			std::cout << '\n' << resultLog << '\n';
+			PrintString(25, 12, resultLog);
 			system("pause");
 			break;
 		}
@@ -28,7 +30,7 @@ void Combat::combatLoop() {
 		Combat::effectAutoBuff();
 		if (isTurnChange)
 			Combat::priorityJudge();
-		//Combat::showStatus();
+		Combat::showStatus();
 
 		if (isRoleTurn) {
 			if (isTurnChange) {//handle cooldown and buff duration
@@ -84,9 +86,21 @@ void Combat::combatLoop() {
 			}
 		}
 		if (!resultLog.empty()) {
-			std::cout << resultLog << "\n";
+			PrintString(25, 9, resultLog);
+			PrintString(25, 23, "");
 			system("pause");
+
+			PrintString(25, 8, ReturnSpace(50));
+			PrintString(25, 9, ReturnSpace(50));
+			PrintString(25, 23, ReturnSpace(50));
 		}
+
+		if (NeedRefreshFrame) {
+			system("pause");
+			PrintCombatFrame();
+			NeedRefreshFrame = false;
+		}
+
 		Combat::turnEnd();//avoid overdose effect
 	}
 }
@@ -143,36 +157,119 @@ void Combat::priorityJudge() {
 
 
 void Combat::showStatus() {
-	system("cls");
+	std::string cur_str = "";
 
-	std::cout << "Role: " << combatRole.role.name << "\t\t" << "Enemy: " << combatEnemy.enemy.name << '\n';
-	std::cout << "Vitality: " << combatRole.role.Vitality << "\t\t" << "Vitality: " << combatEnemy.enemy.Vitality << '\n';
-	std::cout << "Focus: " << combatRole.role.Focus << "\t\t" << "Focus: " << combatEnemy.enemy.Focus << '\n';
-	std::cout << "Speed: " << combatRole.role.Speed << "\t\t" << "Speed: " << combatEnemy.enemy.Speed << '\n';
-	std::cout << "PAttack: " << combatRole.role.PAttack << "\t\t" << "PAttack: " << combatEnemy.enemy.PAttack << '\n';
-	std::cout << "PDefense: " << combatRole.role.PDefense << "\t\t" << "PDefense: " << combatEnemy.enemy.PDefense << '\n';
-	std::cout << "MAttack: " << combatRole.role.MAttack << "\t\t" << "MAttack: " << combatEnemy.enemy.MAttack << '\n';
-	std::cout << "MDefense: " << combatRole.role.MDefense << "\t\t" << "MDefense: " << combatEnemy.enemy.MDefense << '\n';
-	std::cout << "HitRate: " << combatRole.role.HitRate << "\t\t" << "HitRate: " << combatEnemy.enemy.HitRate << '\n';
-	std::cout << "Priority: " << combatRole.priority << "\t\t" << "Priority: " << combatEnemy.priority << '\n';
-	std::cout << "MoveCount: " << combatRole.moveCount << "\t\t" << "MoveCount: " << combatEnemy.moveCount << '\n';
-	std::cout << '\n';
+	// Role information
+	cur_str = "Role: " + combatRole.role.name;
+	PrintString(1, 1, cur_str + ReturnSpace(23 - cur_str.size()));
 
-	std::cout << "Role's actSkills: \n";
-	for (auto a : combatRole.role.actSkills)
-		std::cout << a.name << " cooldown: " << a.curCooldown << '\t';
-	std::cout << "\nRole's buff: \n";
-	for (auto a : combatRole.role.buffs)
-		std::cout << a.name << " duration: " << a.effectDuration << '\t';
-	std::cout << "\nenemy's actSkills: \n";
-	for (auto a : combatEnemy.enemy.actSkills)
-		std::cout << a.name << " cooldown: " << a.curCooldown << '\t';
-	std::cout << "\nenemy's buff: \n";
-	for (auto a : combatEnemy.enemy.buffs)
-		std::cout << a.name << " duration: " << a.effectDuration << '\t';
-	std::cout << '\n';
-	if (isRoleTurn)std::cout << "It's Role's turn " << combatRole.moveCount << "\n\n";
-	else std::cout << "It's Enemy's turn!\n\n";
+	cur_str = "Vitality: " + std::to_string(combatRole.role.Vitality);
+	PrintString(1, 2, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Focus: " + std::to_string(combatRole.role.Focus);
+	PrintString(1, 3, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Speed: " + std::to_string(combatRole.role.Speed);
+	PrintString(1, 4, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PAttack: " + std::to_string(combatRole.role.PAttack);
+	PrintString(1, 5, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PDefense: " + std::to_string(combatRole.role.PDefense);
+	PrintString(1, 6, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MAttack: " + std::to_string(combatRole.role.MAttack);
+	PrintString(1, 7, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MDefense: " + std::to_string(combatRole.role.MDefense);
+	PrintString(1, 8, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "HitRate: " + std::to_string(combatRole.role.HitRate);
+	PrintString(1, 9, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Priority: " + std::to_string(combatRole.priority);
+	PrintString(1, 10, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MoveCount: " + std::to_string(combatRole.moveCount);
+	PrintString(1, 11, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	// Role's actSkills
+	PrintString(1, 13, "Role's actSkills: ");
+	int i = 0;
+	for (i = 0; i < combatRole.role.actSkills.size(); i++) {
+		auto a = combatRole.role.actSkills[i];
+		cur_str = a.name + " cooldown: " + std::to_string(a.curCooldown);
+		PrintString(1, 14 + i, cur_str + ReturnSpace(23 - cur_str.size()));
+	}
+
+	int next = 14 + i + 1;
+	PrintString(1, next, "Role's buff: ");
+	for (int i = next + 1; i < 24; i++) {
+		PrintString(1, next + 1, ReturnSpace(23));
+	}
+	for (int i = 0; i < combatRole.role.buffs.size(); i++) {
+		auto a = combatRole.role.buffs[i];
+		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		PrintString(1, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
+	}
+
+
+	// Enemy information
+	cur_str = "Enemy: " + combatEnemy.enemy.name;
+	PrintString(76, 1, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Vitality: " + std::to_string(combatEnemy.enemy.Vitality);
+	PrintString(76, 2, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Focus: " + std::to_string(combatEnemy.enemy.Focus);
+	PrintString(76, 3, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Speed: " + std::to_string(combatEnemy.enemy.Speed);
+	PrintString(76, 4, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PAttack: " + std::to_string(combatEnemy.enemy.PAttack);
+	PrintString(76, 5, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "PDefense: " + std::to_string(combatEnemy.enemy.PDefense);
+	PrintString(76, 6, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MAttack: " + std::to_string(combatEnemy.enemy.MAttack);
+	PrintString(76, 7, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MDefense: " + std::to_string(combatEnemy.enemy.MDefense);
+	PrintString(76, 8, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "HitRate: " + std::to_string(combatEnemy.enemy.HitRate);
+	PrintString(76, 9, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "Priority: " + std::to_string(combatEnemy.priority);
+	PrintString(76, 10, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	cur_str = "MoveCount: " + std::to_string(combatEnemy.moveCount);
+	PrintString(76, 11, cur_str + ReturnSpace(23 - cur_str.size()));
+
+	// Enemy's actSkills
+	PrintString(76, 13, "Enemy's actSkills: ");
+	for (i = 0; i < combatEnemy.enemy.actSkills.size(); i++) {
+		auto a = combatEnemy.enemy.actSkills[i];
+		cur_str = a.name + " cooldown: " + std::to_string(a.curCooldown);
+		PrintString(76, 14 + i, cur_str + ReturnSpace(23 - cur_str.size()));
+	}
+	// 25
+	next = 14 + i + 1;
+	PrintString(76, next, "Enemy's buff: ");
+	for (int i = next + 1; i < 24; i++) {
+		PrintString(76, i, ReturnSpace(23));
+	}
+
+	for (int i = 0; i < combatEnemy.enemy.buffs.size(); i++) {
+		auto a = combatEnemy.enemy.buffs[i];
+		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		PrintString(76, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
+	}
+
+	if (isRoleTurn) PrintString(25, 11, "It's Role's turn " + std::to_string(combatRole.moveCount));
+	else PrintString(25,11,"It's Enemy's turn!");
 }
 
 void Combat::roleNewTurn(Entity& entity) {
@@ -182,7 +279,7 @@ void Combat::roleNewTurn(Entity& entity) {
 	}
 	for (auto& a : entity.buffs) {
 		a.effectDuration--;
-		if (a.effectDuration == 0) {
+		if (a.effectDuration <= 0) {
 			a.disable(a, entity);
 			entity.removeBuff(a);
 		}
@@ -195,8 +292,8 @@ void Combat::showCombatPanel(int selectIndex) {
 			std::cout << FG_BLUE;
 		}
 		if (i != combatRole.role.actSkills.size())
-			std::cout << i + 1 << ". " << combatRole.role.actSkills[i].name << CLOSE << '\n';
-		else std::cout << i + 1 << ". " << "use item" << CLOSE << '\n';
+			PrintString(26, i+1, std::to_string(i + 1) + ". " + combatRole.role.actSkills[i].name + CLOSE);
+		else PrintString(26, i+1, std::to_string(i + 1) + ". " + "use item" + CLOSE);
 	}
 }
 
@@ -279,7 +376,8 @@ bool Combat::processInput(int& selectIndex, int press) {
 		if (selectIndex == combatRole.role.actSkills.size()) {
 			isTurnChange = HandleUseItemEvent();
 			if (isTurnChange) {
-				resultLog = "Use item!";
+				PrintString(50, 1, "use item!");
+				NeedRefreshFrame = true;
 			}
 		}
 		else {
@@ -311,27 +409,30 @@ Entity& Combat::chooseTarget(ActiveSkills skill) {
 	int selectX = 0;
 	while (true) {
 		showStatus();
-		std::cout << "Choose your target:\n";
+		PrintString(25, 8, "Choose your target:");
 
 		if (skill.needTarget == 1) {
 			if (selectX == 0) {
-				std::cout << FG_YELLOW << combatEnemy.enemy.name << CLOSE << '\n';
+				PrintString(25, 9, FG_YELLOW + combatEnemy.enemy.name + CLOSE);
 			}
 			else {
-				std::cout << combatEnemy.enemy.name << '\n';
+				PrintString(25, 9, combatEnemy.enemy.name);
 			}
 		}
 		else if (skill.needTarget == 2) {
 			if (selectX == 0) {
-				std::cout << FG_YELLOW << combatRole.role.name << CLOSE << '\n';
+				PrintString(25, 9, FG_YELLOW + combatRole.role.name + CLOSE);
 			}
 			else {
-				std::cout << combatRole.role.name << '\n';
+				PrintString(25, 9, combatRole.role.name);
 			}
 		}
 
 		int press = ctl.GetInput();
 		if (ctl.isEnter(press)) {
+			PrintString(25, 8, ReturnSpace(50));
+			PrintString(25, 9, ReturnSpace(50));
+
 			if (skill.needTarget == 1) {
 				return combatEnemy.enemy;
 			}
@@ -342,24 +443,27 @@ Entity& Combat::chooseTarget(ActiveSkills skill) {
 	}
 }
 
+
 int Combat::chooseFocus(int maxFocus) {
 	int useFocus = 0;
 	while (true) {
 		showStatus();
-		std::cout << "(You have " << combatRole.role.Focus - useFocus << " focus left)\n";
+		PrintString(25, 8, "(You have " + std::to_string(combatRole.role.Focus - useFocus) + " focus left)");
+
+		std::string focus_str = "";
 		for (int i = 0; i < combatRole.role.MaxFocus; i++) {
 			if (i < useFocus) {
-				std::cout << FG_RED;
+				focus_str += FG_RED;
 			}
 			else if (i + 1 > combatRole.role.Focus) {
-				std::cout << FG_GREY;
+				focus_str += FG_GREY;
 			}
 			else {
-				std::cout << FG_YELLOW;
+				focus_str += FG_YELLOW;
 			}
-			std::cout << '*' << CLOSE;
+			focus_str += '*' + CLOSE;
 		}
-		std::cout << '\n';
+		PrintString(25, 9, focus_str);
 
 		int press = ctl.GetInput();
 		if (ctl.isRight(press)) {
