@@ -210,27 +210,37 @@ void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply)
 	case WeaponType::WoodenSword:
 		role.PAttack += 5 * factor;
 		role.HitRate += 10 * factor;
+		role.actSkills[0].needDice = 3;
+		role.actSkills[0].category = DamageType::PhysicalSingalAttack;
 		applySkill(role, ActiveSkillType::SpeedUp);
 		break;
 	case WeaponType::Hammer:
 		role.PAttack += 15 * factor;
 		role.HitRate -= 15 * factor;
+		role.actSkills[0].needDice = 4;
+		role.actSkills[0].category = DamageType::PhysicalSingalAttack;
 		applyBuff(role, BuffType::Hammer_Splash);
 		applySkill(role, ActiveSkillType::Provoke);
 		break;
 	case WeaponType::GiantHammer:
 		role.PAttack += 20 * factor;
 		role.HitRate -= 15 * factor;
+		role.actSkills[0].needDice = 5;
+		role.actSkills[0].category = DamageType::PhysicalSingalAttack;
 		applyBuff(role, BuffType::Hammer_Splash);
 		break;
 	case WeaponType::MagicWand:
 		role.MAttack += 10 * factor;
+		role.actSkills[0].needDice = 3;
+		role.actSkills[0].category = DamageType::MagicSingalAttack;
 		applySkill(role, ActiveSkillType::Shock_Blast);
 		applySkill(role, ActiveSkillType::Heal);
 		applySkill(role, ActiveSkillType::Poison);
 		break;
 	case WeaponType::RitualSword:
 		role.MAttack += 15 * factor;
+		role.actSkills[0].needDice = 1;
+		role.actSkills[0].category = DamageType::MagicSingalAttack;
 		applySkill(role, ActiveSkillType::Shock_Blast);
 		break;
 	default:
