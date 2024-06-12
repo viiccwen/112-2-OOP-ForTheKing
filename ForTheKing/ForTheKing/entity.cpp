@@ -227,6 +227,7 @@ void applyEquipmentStats(Role& role, std::shared_ptr<Weapon> weapon, bool apply)
 		role.MAttack += 10 * factor;
 		applySkill(role, ActiveSkillType::Shock_Blast);
 		applySkill(role, ActiveSkillType::Heal);
+		applySkill(role, ActiveSkillType::Poison);
 		break;
 	case WeaponType::RitualSword:
 		role.MAttack += 15 * factor;
