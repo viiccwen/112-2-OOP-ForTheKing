@@ -28,15 +28,15 @@ void Map::printMap(std::vector<Role>& roles, PositionMap& enemyPositionMap, int 
 			startY = endY - 20;
 	}
 
-	std::map<std::pair<int, int>, int> rolePositionMap;
+	std::map<std::pair<int, int>, char> rolePositionMap;
 
 	for (int i = 0; i < 3; i++) {
 		Point rolePosition = roles[i].position;
-		rolePositionMap[std::make_pair(rolePosition.x, rolePosition.y)] = roles[i].index;
+		rolePositionMap[std::make_pair(rolePosition.x, rolePosition.y)] = roles[i].name[0];
 	}
 
 	// make operator on the top
-	rolePositionMap[{role.position.x, role.position.y}] = role.index;
+	rolePositionMap[{role.position.x, role.position.y}] = role.name[0];
 
 
 	// map
@@ -50,10 +50,10 @@ void Map::printMap(std::vector<Role>& roles, PositionMap& enemyPositionMap, int 
 			}
 			else if (rolePositionMap.find({ x, y }) != rolePositionMap.end()) {
 				curStr += BG_YELLOW;
-				if (rolePositionMap[{x, y}] == role.index) {
+				if (rolePositionMap[{x, y}] == role.name[0]) {
 					curStr += FG_GREEN;
 				}
-				curStr += std::to_string(rolePositionMap[{x, y}]) + CLOSE;
+				curStr += rolePositionMap[{x, y}] + CLOSE;
 			}
 			else if (enemyPositionMap.positionMap.find({ x, y }) != enemyPositionMap.positionMap.end()) {
 				curStr += BG_RED + ENEMY + CLOSE;
