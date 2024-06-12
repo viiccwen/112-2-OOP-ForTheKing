@@ -64,6 +64,15 @@ ActiveSkills::ActiveSkills(ActiveSkillType type) : Type(type), curCooldown(0), e
 		needTarget = 2;
 		execute = doSpeedUp;
 		break;
+	case ActiveSkillType::Poison:
+		name = "Poison";
+		description = "Poison enemy 1 turn.";
+		category = DamageType::None;
+		cooldown = 4;//3+1
+		needDice = 2;
+		needTarget = 1;
+		execute = doPoison;
+		break;
 	case ActiveSkillType::Nothing:
 		name = "doNothing";
 		description = "doNothing";
@@ -106,7 +115,7 @@ bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFo
 		result = attacker.name + "'s Attack fail!";
 		return true;
 	}
-	else if (win == skill.needDice) {//Critical
+	else if (win == skill.needDice && skill.needDice>1) {//Critical
 		damage = attack;
 		isCritical = true;
 	}
@@ -115,6 +124,8 @@ bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFo
 	}
 	DamagePhase(attacker, defender, damage, skill.category, isCritical, result);
 	return true;
+
+
 }
 
 bool doFlee(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result) {
@@ -195,8 +206,28 @@ bool doHeal(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocu
 }
 
 bool doSpeedUp(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result) {
-	defender.addBuff(Buffs(BuffType::SpeedUp, 2));//1+1
-	result = attacker.name + " Speed Up " + defender.name + " 1 turn!";
+	double chance = attacker.HitRate;
+	int win = shootCraps(skill.needDice, chance, useFocus);
+	if (win == skill.needDice) {
+		defender.addBuff(Buffs(BuffType::SpeedUp, 2));//1+1
+		result = attacker.name + " Speed Up " + defender.name + " 1 turn!";
+	}
+	else {
+		result = attacker.name + "'s Speed Up fail!";
+	}
+	return true;
+}
+
+bool doPoison(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result) {
+	double chance = attacker.HitRate;
+	int win = shootCraps(skill.needDice, chance, useFocus);
+	if (win != 0) {
+		defender.addBuff(Buffs(BuffType::Poisoned, 5));//1+1
+		result = attacker.name + " Poison " + defender.name + " 4 turn!";
+	}
+	else {
+		result = attacker.name + " Poison fail!";
+	}
 	return true;
 }
 

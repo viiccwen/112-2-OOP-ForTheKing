@@ -10,6 +10,7 @@ enum class ActiveSkillType {
 	Shock_Blast,
 	Heal,
 	SpeedUp,
+	Poison,
 	Nothing
 };
 
@@ -93,6 +94,7 @@ bool doProvoke(ActiveSkills& skill, Entity& attacker, Entity& defender, int useF
 bool doShock_Blast(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
 bool doHeal(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
 bool doSpeedUp(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
+bool doPoison(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
 bool doNothing(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFocus, std::string& result);
 
 //todo implement run 

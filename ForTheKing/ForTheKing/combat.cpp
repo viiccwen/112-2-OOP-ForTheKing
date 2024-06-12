@@ -23,6 +23,7 @@ void Combat::combatLoop() {
 		if (isEnd) {
 			Combat::showStatus();
 			PrintString(25, 12, resultLog);
+			PrintString(25, 13, "");//fix flee show error
 			system("pause");
 			break;
 		}
