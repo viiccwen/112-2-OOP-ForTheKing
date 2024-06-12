@@ -43,6 +43,13 @@
 
 ### 吳盛瑋
 
+1. 戰鬥事件 Handling
+2. 攻擊 layout
+    1. 玩家資訊顯示
+    2. 選單選擇介面
+    3. resultLog 輸出
+3. 舊版 Refactor 製作 layout 獨立物件 （後退版）
+
 ### 陳亮宏
 
 ### 謝睿哲
