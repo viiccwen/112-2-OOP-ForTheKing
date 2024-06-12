@@ -11,9 +11,10 @@
 int Game::Turn = 0;
 
 void Game::InitialRoles() {
-	for (int i = 0; i < roles.size(); i++) {
-		roles[i] = Role(i + 1, "Role" + std::to_string(i + 1));
-	}
+	roles[0] = Role(0, "Alice");
+	roles[0] = Role(0, "Jack");
+	roles[0] = Role(0, "Bomb");
+
 }
 
 void Game::InitialEnemies() {
@@ -446,7 +447,7 @@ void Game::HandleCombat(int& select_index) {
 	if (select_index == 0) {
 		Role& roleR = roles[move_role_index];
 		Combat combat(roleR, enemies[enemyPositionMap.positionMap[{roleR.position.x, roleR.position.y}] - 1]);
-		
+
 		for (int i = 0; i < enemyPositionMap.positionMap.size(); i++) {
 			if (enemies[i].Vitality <= 0) {
 				map.map[enemies[i].position.x][enemies[i].position.y] = ROAD;
@@ -478,7 +479,7 @@ void Game::HandleEvents(Point origin_position, bool& need_refresh) {
 	else if (enemyPositionMap.positionMap.find({ role.position.x, role.position.y }) != enemyPositionMap.positionMap.end()) {
 
 		HandleCombatEvent();
-		
+
 		if (map.map[role.position.x][role.position.y] == ENEMY) {
 			role.position = origin_position;
 		}
