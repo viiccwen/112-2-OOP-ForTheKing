@@ -115,7 +115,7 @@ bool doAttack(ActiveSkills& skill, Entity& attacker, Entity& defender, int useFo
 		result = attacker.name + "'s Attack fail!";
 		return true;
 	}
-	else if (win == skill.needDice && skill.needDice>1) {//Critical
+	else if (win == skill.needDice) {//Critical
 		damage = attack;
 		isCritical = true;
 	}

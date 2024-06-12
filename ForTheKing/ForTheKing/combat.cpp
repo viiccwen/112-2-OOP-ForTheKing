@@ -210,7 +210,9 @@ void Combat::showStatus() {
 	}
 	for (int i = 0; i < combatRole.role.buffs.size(); i++) {
 		auto a = combatRole.role.buffs[i];
-		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		if (a.effectDuration > 9000)
+			cur_str = a.name;
+		else cur_str = a.name + " duration " + std::to_string(a.effectDuration);
 		PrintString(1, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
 
