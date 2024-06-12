@@ -12,8 +12,8 @@ int Game::Turn = 0;
 
 void Game::InitialRoles() {
 	roles[0] = Role(0, "Alice");
-	roles[0] = Role(0, "Jack");
-	roles[0] = Role(0, "Bomb");
+	roles[1] = Role(1, "Jack");
+	roles[2] = Role(2, "Bomb");
 
 }
 
