@@ -210,7 +210,7 @@ void Combat::showStatus() {
 	}
 	for (int i = 0; i < combatRole.role.buffs.size(); i++) {
 		auto a = combatRole.role.buffs[i];
-		cur_str = a.name + " duration " + std::to_string(a.effectDuration);
+		cur_str = a.name + "  " + (a.effectDuration > 90000 ? "passive" : "duration: " + std::to_string(a.effectDuration));
 		PrintString(1, next + i + 1, cur_str + ReturnSpace(23 - cur_str.size()));
 	}
 
@@ -270,7 +270,7 @@ void Combat::showStatus() {
 	}
 
 	if (isRoleTurn) PrintString(25, 11, "It's Role's turn " + std::to_string(combatRole.moveCount));
-	else PrintString(25,11,"It's Enemy's turn!");
+	else PrintString(25, 11, "It's Enemy's turn!");
 }
 
 void Combat::roleNewTurn(Entity& entity) {
@@ -293,8 +293,8 @@ void Combat::showCombatPanel(int selectIndex) {
 			std::cout << FG_BLUE;
 		}
 		if (i != combatRole.role.actSkills.size())
-			PrintString(26, i+1, std::to_string(i + 1) + ". " + combatRole.role.actSkills[i].name + CLOSE);
-		else PrintString(26, i+1, std::to_string(i + 1) + ". " + "use item" + CLOSE);
+			PrintString(26, i + 1, std::to_string(i + 1) + ". " + combatRole.role.actSkills[i].name + CLOSE);
+		else PrintString(26, i + 1, std::to_string(i + 1) + ". " + "use item" + CLOSE);
 	}
 }
 
