@@ -9,30 +9,30 @@ Shop::Shop() {
 	item_lists.push_back(std::make_shared<Else>(ElseType::TeleportScroll));
 
 	item_value.push_back(50);
-	item_value.push_back(100);
-	item_value.push_back(150);
-	item_value.push_back(230);
+	item_value.push_back(10);
+	item_value.push_back(20);
+	item_value.push_back(30);
 
 	// weapon
 	item_lists.push_back(std::make_shared <Weapon>(WeaponType::WoodenSword));
 	item_lists.push_back(std::make_shared <Weapon>(WeaponType::Hammer));
 	item_lists.push_back(std::make_shared <Weapon>(WeaponType::MagicWand));
 
-	item_value.push_back(100);
+	item_value.push_back(20);
 	item_value.push_back(50);
 	item_value.push_back(30);
 
 	// armor
 	item_lists.push_back(std::make_shared <Armor>(ArmorType::PlateArmor));
 	item_lists.push_back(std::make_shared <Armor>(ArmorType::WoodenShield));
-	item_value.push_back(100);
-	item_value.push_back(120);
+	item_value.push_back(10);
+	item_value.push_back(12);
 
 	// accessory
 	item_lists.push_back(std::make_shared <Accessory>(AccessoryType::HolyGrail));
 	item_lists.push_back(std::make_shared<Accessory>(AccessoryType::Bracelet));
 	item_value.push_back(30);
-	item_value.push_back(70);
+	item_value.push_back(40);
 }
 
 void Shop::ShowShopLists(int select_index, int money) {

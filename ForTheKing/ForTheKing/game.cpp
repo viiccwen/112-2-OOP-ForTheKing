@@ -453,7 +453,6 @@ void Game::HandleCombat(int& select_index) {
 				enemyPositionMap.positionMap.erase({ enemies[i].position.x , enemies[i].position.y });
 			}
 		}
-		
 	}
 }
 
@@ -568,6 +567,8 @@ void Game::Run() {
 	do {
 		// determine current player index
 		move_role_index = move_turn % 3;
+
+		if (roles[move_role_index].Vitality <= 0) continue;
 
 		RefreshMap();
 		// print current player name
